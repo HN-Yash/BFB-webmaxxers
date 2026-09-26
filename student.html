@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APAAR Student Wallet</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Simulating a Mobile Device Screen */
+        .mobile-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 850px;
+            background: white;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 450px) {
+            .mobile-frame { height: 90vh; border-radius: 40px; border: 8px solid #0f172a; }
+        }
+
+        /* Top Navigation / Profile */
+        .header {
+            background: #0c3e87;
+            color: white;
+            padding: 40px 25px 25px;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+
+        .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
+        .header p { font-size: 14px; opacity: 0.8; }
+        .badge { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 12px; display: inline-block; margin-top: 10px; }
+
+        /* Main Content */
+        .content { padding: 25px; flex-grow: 1; }
+        .section-title { font-size: 14px; color: #64748b; text-transform: uppercase; font-weight: 600; margin-bottom: 15px; letter-spacing: 0.5px; }
+
+        /* Active Connection Card */
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .icon-box { width: 40px; height: 40px; background: #e0e7ff; color: #3a71c9; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .card-header h3 { font-size: 17px; color: #0f172a; }
+        .card-header p { font-size: 13px; color: #64748b; }
+
+        /* iOS Style Toggles for Selective Disclosure */
+        .data-toggle { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid #f1f5f9; }
+        .data-toggle:first-of-type { border-top: none; }
+        .toggle-label { font-size: 15px; color: #334155; font-weight: 500; }
+        .toggle-sub { font-size: 12px; color: #94a3b8; display: block; margin-top: 2px; }
+        
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: #10b981; }
+        input:checked + .slider:before { transform: translateX(20px); }
+        input:disabled + .slider { opacity: 0.5; cursor: not-allowed; }
+
+        /* Generate Button */
+        button {
+            width: 100%; background: #0c3e87; color: white; border: none; padding: 15px;
+            font-size: 16px; font-weight: 600; border-radius: 12px; cursor: pointer; margin-top: 15px;
+            transition: background 0.3s;
+        }
+        button:active { background: #082f6b; }
+
+        /* Dynamic Token Output */
+        #token_output {
+            display: none; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1; animation: fadeIn 0.4s ease-out;
+        }
+        .pin-display { font-size: 32px; font-weight: 800; color: #0c3e87; letter-spacing: 5px; margin: 10px 0; }
+        .timer { font-size: 13px; color: #ef4444; font-weight: 600; }
+
+        /* Audit Trail */
+        .audit-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+        .audit-info h4 { font-size: 14px; color: #334155; }
+        .audit-info p { font-size: 12px; color: #94a3b8; }
+        .status-badge { background: #dcfce7; color: #166534; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-frame">
+        <div class="header">
+            <h1>Student Wallet</h1>
+            <p style="margin-bottom: 8px;">Enter ID to link wallet:</p>
+            <input type="text" id="wallet_apaar_id" value="APAAR1001" style="width: 100%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 10px 15px; border-radius: 8px; font-size: 15px; font-weight: 600; outline: none;" placeholder="e.g., APAAR1001">
+            <div class="badge">Verified Identity Level 3</div>
+        </div>
+
+        <div class="content">
+            <h2 class="section-title">Pending Authorization</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
+                    <div>
+                        <h3>NITK Surathkal</h3>
+                        <p>Admissions Desk Reporting</p>
+                    </div>
+                </div>
+
+                <div class="disclosure-list">
+                    <div class="data-toggle">
+                        <div>
+                            <span class="toggle-label">Core Identity</span>
+                            <span class="toggle-sub">Name, DOB (Mandatory)</span>
+                        </div>
+                        <label class="switch"><input type="checkbox" id="perm_core" checked disabled><span class="slider"></span></label>
+                    </div>
+                    <div class="data-toggle">
+                        <div>
+                            <span class="toggle-label">Academic Records</span>
+                            <span class="toggle-sub">Board Score, JEE Adv Rank</span>
+                        </div>
+                        <label class="switch"><input type="checkbox" id="perm_academic" checked><span class="slider"></span></label>
+                    </div>
+                </div>
+
+                <button id="auth_btn" onclick="generateToken()">Approve & Verification Request</button>
+
+                <div id="token_output">
+                    <p style="font-size: 13px; color: #64748b;" id="output_msg">Processing wallet verification...</p>
+                    <div class="pin-display" id="display_pin">- - - - - -</div>
+                    <div class="timer" id="countdown">SSI Mode Active</div>
+                </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 30px;">Access Ledger</h2>
+            <div id="audit_trail">
+                <!-- Dynamically populated verification results go here -->
+                <p style="font-size: 13px; color: #94a3b8; text-align: center; padding: 10px 0;">No active verifications logged yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = "http://127.0.0.1:5000";
+
+        async function generateToken() {
+            const apaarId = document.getElementById("wallet_apaar_id").value.trim();
+            const corePermission = document.getElementById("perm_core").checked;
+            const academicPermission = document.getElementById("perm_academic").checked;
+            
+            const tokenOutput = document.getElementById("token_output");
+            const displayPin = document.getElementById("display_pin");
+            const outputMsg = document.getElementById("output_msg");
+            const countdownEl = document.getElementById("countdown");
+            const auditTrail = document.getElementById("audit_trail");
+
+            if (!apaarId) {
+                alert("Please enter a valid APAAR ID");
+                return;
+            }
+
+            tokenOutput.style.display = "block";
+            outputMsg.textContent = "Verifying via SSI Local Protocol...";
+            displayPin.textContent = "......";
+            countdownEl.textContent = "Processing...";
+
+            // Default mock wallet PIN accepted by your backend /api/verify/ssi route
+            const payload = {
+                apaar_id: apaarId,
+                pin: "987654", 
+                permissions: {
+                    core_identity: corePermission,
+                    academic_records: academicPermission
+                }
+            };
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/verify/ssi`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    displayPin.textContent = "987654";
+                    outputMsg.textContent = "Verified Successfully via SSI!";
+                    countdownEl.textContent = "Access Granted & Logged";
+
+                    // Dynamically add a successful record to the Audit Trail
+                    const now = new Date().toLocaleTimeString();
+                    const auditItem = document.createElement("div");
+                    auditItem.className = "audit-item";
+                    auditItem.innerHTML = `
+                        <div class="audit-info">
+                            <h4>NITK Surathkal - Admissions Desk</h4>
+                            <p>${apaarId} • ${now}</p>
+                        </div>
+                        <span class="status-badge">Verified</span>
+                    `;
+
+                    // Remove placeholder text if it's the first audit log
+                    const placeholder = auditTrail.querySelector("p");
+                    if (placeholder && placeholder.textContent.includes("No active verifications")) {
+                        auditTrail.innerHTML = "";
+                    }
+                    
+                    auditTrail.prepend(auditItem);
+
+                } else {
+                    displayPin.textContent = "FAILED";
+                    outputMsg.textContent = result.message || "Verification rejected.";
+                    countdownEl.textContent = "Access Denied";
+                }
+
+            } catch (error) {
+                console.error("Backend Error:", error);
+                tokenOutput.style.display = "block";
+                outputMsg.textContent = "Could not connect to backend node.";
+                displayPin.textContent = "ERR";
+                countdownEl.textContent = "Network Error";
+            }
+        }
+    </script>
+</body>
+</html>
