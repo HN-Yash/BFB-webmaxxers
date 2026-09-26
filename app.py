@@ -154,5 +154,48 @@ def verify_remote():
     return jsonify(
         {"success": True, "mode": "Remote OTP Verified", "data": profile}
     ), 200
+@app.route("/api/verify/ssi", methods=["POST"])
+def verify_ssi():
+    data = request.get_json()
+    apaar_id = data.get("apaar_id") if data else None
+    pin = data.get("pin") if data else None
+    permissions = data.get("permissions", {}) if data else {}
+
+    if not apaar_id or not pin:
+        return jsonify(
+            {"success": False, "message": "Missing APAAR ID or Wallet PIN"}
+        ), 400
+
+    if pin != "987654":
+        return jsonify({"success": False, "message": "Invalid PIN"}), 401
+
+    full_profile = fetch_student_full_profile(apaar_id)
+
+    if full_profile is None:
+        return jsonify(
+            {"success": False, "message": "Student record not found"}
+        ), 404
+
+    filtered_data = {}
+
+    if permissions.get("core_identity", True):
+        filtered_data["student_id"] = full_profile["student_id"]
+        filtered_data["full_name"] = full_profile["full_name"]
+        filtered_data["dob"] = full_profile["dob"]
+        filtered_data["category"] = full_profile["category"]
+        filtered_data["domicile_state"] = full_profile["domicile_state"]
+        # CRITICAL FIX: Allow photo and parents through the filter
+        filtered_data["profile_pic"] = full_profile.get("profile_pic")
+        filtered_data["father_name"] = full_profile.get("father_name")
+        filtered_data["mother_name"] = full_profile.get("mother_name")
+
+    if permissions.get("academic_records", True):
+        filtered_data["credentials"] = full_profile["credentials"]
+
+    return jsonify({
+        "success": True,
+        "mode": "SSI Wallet PIN Verified",
+        "data": filtered_data,
+    }), 200
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
