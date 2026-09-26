@@ -161,5 +161,90 @@
         </div>
     </div>
 
+    <script>
+        const BACKEND_URL = "http://127.0.0.1:5000";
+
+        async function generateToken() {
+            const apaarId = document.getElementById("wallet_apaar_id").value.trim();
+            const corePermission = document.getElementById("perm_core").checked;
+            const academicPermission = document.getElementById("perm_academic").checked;
+            
+            const tokenOutput = document.getElementById("token_output");
+            const displayPin = document.getElementById("display_pin");
+            const outputMsg = document.getElementById("output_msg");
+            const countdownEl = document.getElementById("countdown");
+            const auditTrail = document.getElementById("audit_trail");
+
+            if (!apaarId) {
+                alert("Please enter a valid APAAR ID");
+                return;
+            }
+
+            tokenOutput.style.display = "block";
+            outputMsg.textContent = "Verifying via SSI Local Protocol...";
+            displayPin.textContent = "......";
+            countdownEl.textContent = "Processing...";
+
+            // Default mock wallet PIN accepted by your backend /api/verify/ssi route
+            const payload = {
+                apaar_id: apaarId,
+                pin: "987654", 
+                permissions: {
+                    core_identity: corePermission,
+                    academic_records: academicPermission
+                }
+            };
+
+           try {
+                // Point to the new PIN generation route
+                const response = await fetch(`${BACKEND_URL}/api/wallet/generate_pin`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Display the dynamic PIN returned by the server
+                    displayPin.textContent = result.pin;
+                    outputMsg.textContent = "Time-sensitive PIN generated!";
+                    countdownEl.textContent = "Hand this PIN to the verification desk";
+
+                    const now = new Date().toLocaleTimeString();
+                    const auditItem = document.createElement("div");
+                    auditItem.className = "audit-item";
+                    auditItem.innerHTML = `
+                        <div class="audit-info">
+                            <h4>NITK Surathkal - Admissions Desk</h4>
+                            <p>${apaarId} • ${now}</p>
+                        </div>
+                        <span class="status-badge">Authorized</span>
+                    `;
+
+                    const placeholder = auditTrail.querySelector("p");
+                    if (placeholder && placeholder.textContent.includes("No active verifications")) {
+                        auditTrail.innerHTML = "";
+                    }
+                    
+                    auditTrail.prepend(auditItem);
+
+                } else {
+                    displayPin.textContent = "FAILED";
+                    outputMsg.textContent = result.message || "Could not generate PIN.";
+                    countdownEl.textContent = "Access Denied";
+                }
+
+            } catch (error) {
+                console.error("Backend Error:", error);
+                tokenOutput.style.display = "block";
+                outputMsg.textContent = "Could not connect to backend node.";
+                displayPin.textContent = "ERR";
+                countdownEl.textContent = "Network Error";
+            }
+        }
+    </script>
 </body>
 </html>
