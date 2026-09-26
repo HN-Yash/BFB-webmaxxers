@@ -27,6 +27,43 @@
             </svg>
                 <h2>Zero Verification<br>Node</h2>
             </div>
+             <p class="subtitle">#TAGLINE</p>
+
+            <!-- Verification Mode toggle -->
+            <div class="toggle-container">
+            <button class="toggle-btn active" id="tab_otp">Remote (OTP)</button>
+            <button class="toggle-btn" id="tab_pin">In-Person (PIN)</button>
+        </div>
+
+            <!-- ID Input area -->
+           <div class="input-section" id="mode_otp">
+            <label class="input-label">Enter Student APAAR ID</label>
+            <div class="search-bar-wrapper">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" id="apaar_input" value="APAAR1012" placeholder="APAAR ID">
+                <button class="action-btn" id="send_otp_btn">Send OTP</button>
+            </div>
+        </div>
+
+            <!-- Secondary Input Area Skeleton (Hidden initially) -->
+            <div id="mode_secondary" style="display: none;">
+                <label class="input-label">Enter Hardware PIN</label>
+                <div class="search-bar-wrapper">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    <input type="password" id="pin_input" placeholder="6-digit PIN" maxlength="6">
+                    <button id="verify_btn_pin">
+                        <span>Unlock</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Card Skeleton -->
+            <div id="result_card">
+                <!-- Data will be injected here via JS later -->
+            </div>
+
             
            
         </div>
