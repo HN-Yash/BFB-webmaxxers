@@ -10,8 +10,8 @@
 body {
     display: flex;
     justify-content: center;
-    align-items: center; /* Changed to center perfectly vertically */
-    padding: 20px;
+    align-items: flex-start; /* CRITICAL: Changed from center to allow scrolling */
+    padding: 60px 20px; /* Increased top/bottom padding so it doesn't touch the edges */
     min-height: 100vh;
     background-color: #eef2f6; 
     color: #0f172a;

@@ -14,18 +14,36 @@
     <div class="perspective-wrapper">
         <div class="container" id="glass-card">
             
-            <!-- Logo & Title Section -->
-            <!-- Logo & Title Section -->
+            
             <div class="title-wrapper">
                 <!-- Logo & Title Section -->
             <div class="title-wrapper">
                 <svg class="main-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Background Ribbons -->
-                    <polygon points="43,55 18,92 33,83 45,95" fill="#1e5e39" stroke="#7eb38a" stroke-width="3" stroke-linejoin="round" />
-                    <polygon points="57,55 82,92 67,83 55,95" fill="#1e5e39" stroke="#7eb38a" stroke-width="3" stroke-linejoin="round" />
+                  
+                    <polygon points="34,50 19,83 32,77 43,53" fill="#2f7a44" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    <polygon points="43,53 32,77 42,88 49,56" fill="#1b4e2b" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+
+                    <!-- Right Ribbon: Closer to center, slightly longer (Mirrored) -->
+                    <polygon points="51,56 58,88 68,77 57,53" fill="#1b4e2b" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    <polygon points="57,53 68,77 81,83 66,50" fill="#2f7a44" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
                     
                     <!-- Scalloped Rosette (12-point) -->
                     <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" fill="#ffffff" stroke="#1e5e39" stroke-width="7" stroke-linejoin="round" />
+                    <!-- Left & Right Ribbons remain here above -->
+                    
+                    <!-- INSERT THIS: White Gap Contour (masks a ~3px gap over the ribbons) -->
+                    <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" 
+                             fill="#ffffff" 
+                             stroke="#ffffff" 
+                             stroke-width="10" 
+                             stroke-linejoin="round" />
+
+                    <!-- Scalloped Rosette (Your existing green line sits on top) -->
+                    <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" 
+                             fill="#ffffff" 
+                             stroke="#1e5e39" 
+                             stroke-width="7" 
+                             stroke-linejoin="round" />
                     
                     <!-- Center Checkmark -->
                     <path d="M 36 42 L 45 51 L 64 30" stroke="#1e5e39" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" />
@@ -43,38 +61,130 @@
         </div>
 
             <!-- ID Input area -->
-           <div class="input-section" id="mode_otp">
+           <!-- Mode 1: Remote OTP Flow -->
+        <div class="input-section" id="mode_otp">
             <label class="input-label">Enter Student APAAR ID</label>
             <div class="search-bar-wrapper">
                 <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
-                <input type="text" id="apaar_input" value="APAAR1012" placeholder="APAAR ID">
-                <button class="action-btn" id="send_otp_btn">Send OTP</button>
+                <input type="text" id="apaarInput" value="APAAR1001" placeholder="APAAR ID">
+                <!-- Linked to requestOTP() -->
+                <button class="action-btn" id="send_otp_btn" onclick="requestOTP()">Send OTP</button>
+            </div>
+
+            <!-- OTP Entry Area (Hidden until Send OTP is clicked) -->
+            <div id="otp_entry_area" style="display: none; margin-top: 20px;">
+                <label class="input-label">Enter OTP from Email</label>
+                <div class="search-bar-wrapper">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    <input type="text" id="otpInput" placeholder="e.g. 123456">
+                    <!-- Linked to testRemoteVerification() -->
+                    <button class="action-btn" onclick="testRemoteVerification()" style="background-color: #059669;">Verify</button>
+                </div>
             </div>
         </div>
 
-            <!-- Secondary Input Area Skeleton (Hidden initially) -->
-            <div id="mode_secondary" style="display: none;">
-                <label class="input-label">Enter Hardware PIN</label>
-                <div class="search-bar-wrapper">
-                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                    <input type="password" id="pin_input" placeholder="6-digit PIN" maxlength="6">
-                    <button id="verify_btn_pin">
-                        <span>Unlock</span>
-                    </button>
+        <!-- Mode 2: In-Person (PIN) Flow -->
+        <div class="input-section" id="mode_pin" style="display: none;">
+            <label class="input-label">Wallet PIN</label>
+            <div class="search-bar-wrapper" style="margin-bottom: 16px;">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                </svg>
+                <input type="password" id="pinInput" value="987654" placeholder="6-digit PIN">
+                <!-- Linked to testSSIVerification() -->
+                <button class="action-btn" onclick="testSSIVerification()">Unlock</button>
+            </div>
+
+            <!-- Granular Consent Checkboxes -->
+            <div style="background: rgba(255,255,255,0.6); padding: 12px 16px; border-radius: 12px; border: 1px solid #cbd5e1;">
+                <p class="input-label" style="margin-bottom: 10px; font-size: 12px;">Granular Consent Permissions:</p>
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #0f172a; margin-bottom: 8px; cursor: pointer;">
+                    <input type="checkbox" id="checkCore" checked style="width: 16px; height: 16px;"> 
+                    Core Identity (Name, DOB, State)
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #0f172a; cursor: pointer;">
+                    <input type="checkbox" id="checkAcademic" checked style="width: 16px; height: 16px;"> 
+                    Academic Credentials Ledger
+                </label>
+            </div>
+        </div>
+
+        <!-- Result Card (Hidden by default until API success) -->
+        <div id="result_card" class="result-card" style="display: block;">
+            
+            <div class="result-header">
+                <div class="verified-status">
+                    <svg class="status-icon" viewBox="0 0 20 20" fill="#10b981">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Identity & Records Verified</span>
+                </div>
+                <!-- Large Green Ribbon Badge -->
+                <svg class="main-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                   <!-- Left Ribbon: Extends along normal vector (~115° radial) -->
+                   <!-- Left Ribbon: Shorter and wider -->
+                  <!-- Left Ribbon: Closer to center, slightly longer -->
+                    <polygon points="34,50 19,83 32,77 43,53" fill="#2f7a44" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    <polygon points="43,53 32,77 42,88 49,56" fill="#1b4e2b" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+
+                    <!-- Right Ribbon: Closer to center, slightly longer (Mirrored) -->
+                    <polygon points="51,56 58,88 68,77 57,53" fill="#1b4e2b" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    <polygon points="57,53 68,77 81,83 66,50" fill="#2f7a44" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    
+                    <!-- Scalloped Rosette (12-point) -->
+                    <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" fill="#ffffff" stroke="#1e5e39" stroke-width="7" stroke-linejoin="round" />
+                    <!-- Left & Right Ribbons remain here above -->
+                    
+                    <!-- INSERT THIS: White Gap Contour (masks a ~3px gap over the ribbons) -->
+                    <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" 
+                             fill="#ffffff" 
+                             stroke="#ffffff" 
+                             stroke-width="10" 
+                             stroke-linejoin="round" />
+
+                    <!-- Scalloped Rosette (Your existing green line sits on top) -->
+                    <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" 
+                             fill="#ffffff" 
+                             stroke="#1e5e39" 
+                             stroke-width="7" 
+                             stroke-linejoin="round" />
+                    
+                    <!-- Center Checkmark -->
+                    <path d="M 36 42 L 45 51 L 64 30" stroke="#1e5e39" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                </svg>
+            </div>
+
+            <div class="profile-section">
+                <!-- IDs added here so JS can inject the real API data -->
+                <img src="https://via.placeholder.com/150" alt="Student Photo" class="profile-img" id="student_photo">
+                <div class="profile-details">
+                    <h3 id="student_name">Student Name</h3>
+                    <p id="student_dob">DOB: YYYY-MM-DD</p>
                 </div>
             </div>
 
-            <!-- Result Card Skeleton -->
-            <div id="result_card">
-                <!-- Data will be injected here via JS later -->
+            <div class="data-grid">
+                <div class="data-box">
+                    <div class="data-label">BOARD SCORE</div>
+                    <div class="data-value" id="student_score">--%</div>
+                </div>
+                <div class="data-box">
+                    <div class="data-label">JEE ADVANCED RANK</div>
+                    <div class="data-value" id="student_rank">--</div>
+                </div>
+                <div class="data-box full-width">
+                    <div class="data-label">PARENTS</div>
+                    <div class="data-value" id="student_parents">--</div>
+                </div>
             </div>
-
             
-           
         </div>
     </div>
 
+    <!-- Link your logic file -->
+    <script src="script.js"></script>
 </body>
-</html>
