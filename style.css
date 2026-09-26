@@ -42,6 +42,16 @@ body {
     gap: 18px;
     margin-bottom: 16px;
 }
+.title-wrapper h2 {
+    margin: 0;
+    padding: 0;
+    line-height: 1.15;
+    font-size: 40px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    transform: translateY(-12px); /* Shifts the text up to center on the circular seal */
+}
 
 .main-logo {
     width: 120px; /* Increased logo size */
@@ -266,5 +276,11 @@ h2 {
     color: #0f172a;
 }
 #card-title{
-    font-size: 20px
+    font-size: 25px;
+    transform: translateY(15px);
+}
+#tick{
+    width: 30px;
+    height: 30px;
+    transform: translateY(15px);
 }
