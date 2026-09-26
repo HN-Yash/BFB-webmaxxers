@@ -12,6 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 active_otps = {}
+active_pins={}
 
 def send_otp_email(recipient_email, student_name, otp):
     """Sends an OTP email via Gmail SMTP."""
@@ -157,49 +158,78 @@ def verify_remote():
         {"success": True, "mode": "Remote OTP Verified", "data": profile}
     ), 200
 
+@app.route("/api/wallet/generate_pin", methods=["POST"])
+def wallet_generate_pin():
+    """Triggered by the student's mobile wallet to create a temporary access PIN."""
+    data = request.get_json()
+    apaar_id = data.get("apaar_id") if data else None
+    permissions = data.get("permissions", {}) if data else {}
+
+    if not apaar_id:
+        return jsonify({"success": False, "message": "Missing APAAR ID"}), 400
+
+    profile = fetch_student_full_profile(apaar_id)
+    if not profile:
+        return jsonify({"success": False, "message": "Student record not found"}), 404
+
+    # Generate a random 6-digit PIN
+    pin = str(random.randint(100000, 999999))
+    
+    # Store the PIN and the permissions the student authorized
+    active_pins[apaar_id] = {
+        "pin": pin,
+        "permissions": permissions
+    }
+
+    return jsonify({
+        "success": True, 
+        "pin": pin, 
+        "message": "PIN generated successfully"
+    }), 200
+
 @app.route("/api/verify/ssi", methods=["POST"])
 def verify_ssi():
+    """Triggered by the desktop node to verify the PIN and fetch authorized data."""
     data = request.get_json()
     apaar_id = data.get("apaar_id") if data else None
     pin = data.get("pin") if data else None
-    permissions = data.get("permissions", {}) if data else {}
 
     if not apaar_id or not pin:
-        return jsonify(
-            {"success": False, "message": "Missing APAAR ID or Wallet PIN"}
-        ), 400
+        return jsonify({"success": False, "message": "Missing APAAR ID or Wallet PIN"}), 400
 
-    if pin != "987654":
-        return jsonify({"success": False, "message": "Invalid PIN"}), 401
+    stored_data = active_pins.get(apaar_id)
+
+    if not stored_data or stored_data["pin"] != pin:
+        return jsonify({"success": False, "message": "Invalid or expired PIN"}), 401
 
     full_profile = fetch_student_full_profile(apaar_id)
 
-    if full_profile is None:
-        return jsonify(
-            {"success": False, "message": "Student record not found"}
-        ), 404
-
+    # Use the permissions strictly dictated by the student's wallet
+    wallet_permissions = stored_data["permissions"]
     filtered_data = {}
 
-    if permissions.get("core_identity", True):
+    if wallet_permissions.get("core_identity", True):
         filtered_data["student_id"] = full_profile["student_id"]
         filtered_data["full_name"] = full_profile["full_name"]
         filtered_data["dob"] = full_profile["dob"]
         filtered_data["category"] = full_profile["category"]
         filtered_data["domicile_state"] = full_profile["domicile_state"]
-        # CRITICAL FIX: Allow photo and parents through the filter
         filtered_data["profile_pic"] = full_profile.get("profile_pic")
         filtered_data["father_name"] = full_profile.get("father_name")
         filtered_data["mother_name"] = full_profile.get("mother_name")
 
-    if permissions.get("academic_records", True):
+    if wallet_permissions.get("academic_records", True):
         filtered_data["credentials"] = full_profile["credentials"]
+    else:
+        filtered_data["credentials"] = []
+
+    # Consume the PIN so it cannot be reused
+    del active_pins[apaar_id]
 
     return jsonify({
         "success": True,
         "mode": "SSI Wallet PIN Verified",
         "data": filtered_data,
     }), 200
-
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
