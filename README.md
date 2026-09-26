@@ -25,5 +25,4 @@ The authority sees a definitive, tamper-proof dashboard, drastically speeding up
 * **Frontend:** HTML5, CSS3, Vanilla JavaScript (Zero heavy frameworks for maximum speed)
 * **Backend:** Python, Flask, Flask-CORS
 * **Database:** SQLite3 (Local ledger simulating NAD/DigiLocker API responses)
-* **Protocols:** SMTP, RESTful APIs
-
+* **Protocols:** SMTP, RESTful API
