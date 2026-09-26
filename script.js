@@ -29,7 +29,8 @@ let currentStudentCredentials = [];
    HELPER: INJECT DATA & SHOW RESULT CARD
    ========================================= */
 
-function showResultCard(apiData) {
+// Add 'mode' to the function signature
+function showResultCard(apiData, mode) {
     // 1. Hide the input forms
     document.querySelector('.toggle-container').style.display = 'none';
     document.getElementById('mode_otp').style.display = 'none';
@@ -46,9 +47,8 @@ function showResultCard(apiData) {
         document.getElementById('student_parents').innerText = "Restricted Access";
     }
 
-    // 3. Handle Profile Photo gracefully (Cache-Buster Included)
+    // 3. Handle Profile Photo gracefully
     const photoEl = document.getElementById('student_photo');
-    
     photoEl.onerror = function() {
         this.onerror = null; 
         this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=e8f5ec&color=1b5e20&size=150`;
@@ -67,27 +67,41 @@ function showResultCard(apiData) {
     // 4. Setup Dynamic Credentials & Populate Dropdown
     currentStudentCredentials = apiData.credentials || [];
     const dropdown = document.getElementById('category_dropdown');
-    dropdown.innerHTML = '<option value="All">All Verified Records</option>'; // Reset dropdown on new search
-
-    if (currentStudentCredentials.length > 0) {
-        // Extract unique categories (e.g., "Board Exam", "National Engineering")
-        const uniqueCategories = [...new Set(currentStudentCredentials.map(c => c.category).filter(Boolean))];
-        
-        uniqueCategories.forEach(cat => {
-            const opt = document.createElement('option');
-            opt.value = cat;
-            opt.innerText = cat;
-            dropdown.appendChild(opt);
-        });
+    
+    if(dropdown) {
+        dropdown.innerHTML = '<option value="All">All Verified Records</option>'; 
+        if (currentStudentCredentials.length > 0) {
+            const uniqueCategories = [...new Set(currentStudentCredentials.map(c => c.category).filter(Boolean))];
+            uniqueCategories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.innerText = cat;
+                dropdown.appendChild(opt);
+            });
+        }
     }
-
-    // Trigger the initial render showing everything
     renderCredentialBoxes("All");
 
-    // 5. Reveal the green success card
+    // 5. Apply "Edge vs Cloud" UI Differences
+    const downloadBtn = document.getElementById('download_hr_copy');
+    const archBadge = document.getElementById('auth_architecture_badge');
+
+    if (mode === 'remote') {
+        archBadge.innerText = "☁️ CLOUD: Centralized Master Recovery";
+        archBadge.style.background = "#fee2e2";
+        archBadge.style.color = "#991b1b";
+        downloadBtn.style.display = 'block';
+        downloadBtn.onclick = () => window.print();
+    } else {
+        archBadge.innerText = "📱 EDGE: Scoped SSI Presentation";
+        archBadge.style.background = "#e0e7ff";
+        archBadge.style.color = "#3730a3";
+        downloadBtn.style.display = 'none';
+    }
+
+    // 6. Reveal the green success card
     document.getElementById('result_card').style.display = 'block';
 }
-
 /* =========================================
    DYNAMIC CREDENTIAL RENDERER
    ========================================= */
@@ -186,7 +200,7 @@ async function testRemoteVerification() {
         
         if (response.ok && data.success) {
             const studentData = data.student_data || data.data || data; 
-            showResultCard(studentData);
+            showResultCard(studentData, 'remote');
         } else {
             alert("Verification Failed: " + (data.message || "Invalid OTP"));
             verifyBtn.innerText = "Verify";
@@ -225,7 +239,7 @@ async function testSSIVerification() {
         
         if (response.ok && data.success) {
             const studentData = data.student_data || data.data || data;
-            showResultCard(studentData);
+            showResultCard(studentData, 'pin');
         } else {
             alert("Unlock Failed: " + (data.message || "Invalid PIN"));
             unlockBtn.innerText = "Unlock";
