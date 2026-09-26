@@ -21,41 +21,76 @@ tabPin.addEventListener('click', () => {
     modeOtp.style.display = 'none';
 });
 
+
 /* =========================================
    HELPER: INJECT DATA & SHOW RESULT CARD
    ========================================= */
 
 function showResultCard(apiData) {
-    // 1. Hide the input forms and toggle switch for a clean UI
+    // 1. Hide the input forms
     document.querySelector('.toggle-container').style.display = 'none';
-    modeOtp.style.display = 'none';
-    modePin.style.display = 'none';
+    document.getElementById('mode_otp').style.display = 'none';
+    document.getElementById('mode_pin').style.display = 'none';
 
-    // 2. Map backend data to UI elements 
-    // (Note: Adjust 'apiData.name' to 'apiData.full_name' etc., based on your exact Python JSON keys)
-    document.getElementById('student_name').innerText = apiData.name || apiData.full_name || 'Verified Student';
-    document.getElementById('student_dob').innerText = "DOB: " + (apiData.dob || 'Confidential');
+    // 2. Map Core Identity
+    const fullName = apiData.full_name || apiData.name || 'Restricted Access';
+    document.getElementById('student_name').innerText = fullName;
+    document.getElementById('student_dob').innerText = "DOB: " + (apiData.dob || 'XXX') + (apiData.category ? " • " + apiData.category : "");
     
-    if (apiData.board_score) {
-        document.getElementById('student_score').innerText = apiData.board_score + '%';
-    }
-    if (apiData.jee_rank || apiData.jee_adv_rank) {
-        document.getElementById('student_rank').innerText = apiData.jee_rank || apiData.jee_adv_rank;
-    }
-    
-    // Format parents' names if provided
     if (apiData.father_name && apiData.mother_name) {
         document.getElementById('student_parents').innerText = `${apiData.father_name} & ${apiData.mother_name}`;
+    } else {
+        document.getElementById('student_parents').innerText = "Restricted Access";
     }
 
-    // Optional: Update profile photo if your API returns a URL
-    if (apiData.photo_url || apiData.profile_pic) {
-        document.getElementById('student_photo').src = apiData.photo_url || apiData.profile_pic;
+// 3. Handle Profile Photo gracefully (with error fallback)
+   // 3. Handle Profile Photo gracefully (with error fallback)
+    const photoEl = document.getElementById('student_photo');
+    
+    photoEl.onerror = function() {
+        console.error("Image failed to load:", this.src);
+        this.onerror = null; 
+        this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=e8f5ec&color=1b5e20&size=150`;
+    };
+
+    let providedPic = apiData.profile_pic || apiData.photo_url;
+    if (providedPic && providedPic !== "null" && providedPic.trim() !== "") {
+        // Point explicitly to the Flask server
+        if (providedPic.startsWith('/static')) {
+            providedPic = 'http://127.0.0.1:5000' + providedPic; 
+        }
+        // Cache-buster: forces the browser to fetch the image fresh every single time
+        photoEl.src = providedPic + "?v=" + new Date().getTime();
+    } else {
+        photoEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=e8f5ec&color=1b5e20&size=150`;
+    }
+    // 4. Default credential states
+    document.getElementById('student_score').innerText = '--%';
+    document.getElementById('student_rank').innerText = '--';
+
+    // 5. Bulletproof Credential Extraction
+    if (apiData.credentials && apiData.credentials.length > 0) {
+        apiData.credentials.forEach(cred => {
+            const cat = (cred.category || "").toLowerCase();
+            const name = (cred.name || "").toLowerCase();
+
+            // Catch any variation of Board / ICSE / CBSE
+            if (cat.includes('board') || name.includes('board') || name.includes('icse') || name.includes('cbse')) {
+                const val = cred.value.toString();
+                document.getElementById('student_score').innerText = val.includes('%') ? val : val + '%';
+            }
+            
+            // Catch any variation of Engineering / JEE
+            if (cat.includes('engineering') || name.includes('jee')) {
+                document.getElementById('student_rank').innerText = cred.value;
+            }
+        });
     }
 
-    // 3. Reveal the green success card
+    // 6. Reveal the green success card
     document.getElementById('result_card').style.display = 'block';
 }
+
 
 /* =========================================
    API INTEGRATION FUNCTIONS
@@ -77,10 +112,12 @@ async function requestOTP() {
 
         const data = await response.json();
         
-        // Show OTP entry area if successful
-        btn.innerText = "Sent!";
-        document.getElementById('otp_entry_area').style.display = 'block';
-        
+        if (response.ok && data.success) {
+            btn.innerText = "Sent!";
+            document.getElementById('otp_entry_area').style.display = 'block';
+        } else {
+            throw new Error(data.message || "Failed to generate OTP");
+        }
     } catch (error) {
         alert("Error requesting OTP: " + error.message);
         btn.innerText = "Send OTP";
@@ -92,7 +129,6 @@ async function testRemoteVerification() {
     const apaarId = document.getElementById('apaarInput').value;
     const userOtp = document.getElementById('otpInput').value;
     
-    // Find the button that was clicked (inside the OTP entry area)
     const verifyBtn = event.target;
     verifyBtn.innerText = "Verifying...";
 
@@ -108,9 +144,7 @@ async function testRemoteVerification() {
 
         const data = await response.json();
         
-        // Assuming your Flask backend returns { success: true, data: {...} } or similar
-        if (response.ok) {
-            // Pass the inner data object to the UI populator
+        if (response.ok && data.success) {
             const studentData = data.student_data || data.data || data; 
             showResultCard(studentData);
         } else {
@@ -149,7 +183,7 @@ async function testSSIVerification() {
 
         const data = await response.json();
         
-        if (response.ok) {
+        if (response.ok && data.success) {
             const studentData = data.student_data || data.data || data;
             showResultCard(studentData);
         } else {
