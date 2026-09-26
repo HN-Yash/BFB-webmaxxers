@@ -33,3 +33,35 @@ body {
     width: 100%;
     position: relative;
 }
+
+.header-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+/* Sizing the SVG Logo */
+.main-logo {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+}
+
+/* Main Title Typography */
+h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f172a; /* Dark slate */
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+/* Subtitle under the header */
+.subtitle {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    padding-right: 10px; /* Prevents text from hitting the very edge */
+}
