@@ -1,6 +1,7 @@
 import random
 import smtplib
 import sqlite3
+import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Flask, jsonify, request
@@ -108,7 +109,12 @@ def generate_otp():
     student_name = student["full_name"]
 
     otp = str(random.randint(100000, 999999))
-    active_otps[apaar_id] = otp
+    
+    # Store OTP with a 5-minute (300 seconds) expiration timestamp
+    active_otps[apaar_id] = {
+        "otp": otp,
+        "expires_at": time.time() + 300
+    }
 
     print(f"\n==========================================")
     print(f"[TERMINAL BACKUP] OTP for {apaar_id}: {otp}")
@@ -138,11 +144,23 @@ def verify_remote():
             {"success": False, "message": "Missing APAAR ID or OTP"}
         ), 400
 
-    stored_otp = active_otps.get(apaar_id)
+    stored_data = active_otps.get(apaar_id)
 
-    if not stored_otp or stored_otp != user_otp:
+    if not stored_data:
         return jsonify(
-            {"success": False, "message": "Invalid or expired OTP"}
+            {"success": False, "message": "No active OTP found. Please request a new one."}
+        ), 401
+
+    # Check if the current time has passed the expiration timestamp
+    if time.time() > stored_data["expires_at"]:
+        del active_otps[apaar_id] # Clean up the expired OTP
+        return jsonify(
+            {"success": False, "message": "OTP has expired. Please request a new one."}
+        ), 401
+
+    if stored_data["otp"] != user_otp:
+        return jsonify(
+            {"success": False, "message": "Invalid OTP"}
         ), 401
 
     profile = fetch_student_full_profile(apaar_id)

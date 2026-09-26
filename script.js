@@ -173,7 +173,7 @@ async function requestOTP() {
             throw new Error(data.message || "Failed to generate OTP");
         }
     } catch (error) {
-        alert("Error requesting OTP: " + error.message);
+        showToast("Error requesting OTP: " + error.message, "error");
         btn.innerText = "Send OTP";
         btn.disabled = false;
     }
@@ -202,11 +202,11 @@ async function testRemoteVerification() {
             const studentData = data.student_data || data.data || data; 
             showResultCard(studentData, 'remote');
         } else {
-            alert("Verification Failed: " + (data.message || "Invalid OTP"));
+            showToast("Verification Failed: " + (data.message || "Invalid OTP"), "error")
             verifyBtn.innerText = "Verify";
         }
     } catch (error) {
-        alert("Error verifying OTP: " + error.message);
+        showToast("Error verifying OTP: " + error.message, "error");
         verifyBtn.innerText = "Verify";
     }
 }
@@ -241,11 +241,11 @@ async function testSSIVerification() {
             const studentData = data.student_data || data.data || data;
             showResultCard(studentData, 'pin');
         } else {
-            alert("Unlock Failed: " + (data.message || "Invalid PIN"));
+            showToast("Unlock Failed: " + (data.message || "Invalid PIN"), "error");
             unlockBtn.innerText = "Unlock";
         }
     } catch (error) {
-        alert("Error verifying SSI PIN: " + error.message);
+        showToast("Error verifying SSI PIN: " + error.message, "error");
         unlockBtn.innerText = "Unlock";
     }
 }
@@ -320,4 +320,23 @@ function resetToPreviousMenu() {
         document.getElementById('mode_otp').style.display = 'block';
         document.getElementById('mode_pin').style.display = 'none';
     }
+}
+
+/* =========================================
+   TOAST NOTIFICATION HELPER
+   ========================================= */
+function showToast(message, type = 'error') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerText = message;
+    
+    container.appendChild(toast);
+    
+    // Automatically remove it from the DOM after 3 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 5000);
 }
