@@ -33,6 +33,7 @@ body {
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
     width: 100%;
     position: relative;
+    
 }
 
 
@@ -73,11 +74,14 @@ h2 {
 }
 
 .subtitle {
-    font-size: 20px; /* Increased from 14px */
+    font-size: 22px; /* Increased from 14px */
     color: #475569;
     line-height: 1.5;
     margin-bottom: 28px;
     padding-right: 10px;
+    text-align: center;
+    padding: 0;
+    
 }
 
 
@@ -284,3 +288,30 @@ h2 {
     height: 30px;
     transform: translateY(15px);
 }
+/* =========================================
+   THEME TOGGLE BUTTON
+   ========================================= */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #0f172a;
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.05);
+}
+
