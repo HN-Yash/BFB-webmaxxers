@@ -44,6 +44,7 @@ Zero Document Verification Node
     except Exception as e:
         print(f"[SMTP ERROR] Could not send email to {recipient_email}: {e}")
         return False
+
 def get_db_connection():
     conn = sqlite3.connect("students.db")
     conn.row_factory = sqlite3.Row
@@ -79,6 +80,7 @@ def fetch_student_full_profile(student_id):
     profile = dict(student)
     profile["credentials"] = credentials
     return profile
+
 @app.route("/api/otp/generate", methods=["POST"])
 def generate_otp():
     data = request.get_json()
@@ -154,6 +156,7 @@ def verify_remote():
     return jsonify(
         {"success": True, "mode": "Remote OTP Verified", "data": profile}
     ), 200
+
 @app.route("/api/verify/ssi", methods=["POST"])
 def verify_ssi():
     data = request.get_json()
@@ -197,5 +200,6 @@ def verify_ssi():
         "mode": "SSI Wallet PIN Verified",
         "data": filtered_data,
     }), 200
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
