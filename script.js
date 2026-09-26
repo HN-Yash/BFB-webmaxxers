@@ -22,6 +22,9 @@ tabPin.addEventListener('click', () => {
 });
 
 
+// Global variable to hold the current profile's credentials for quick filtering
+let currentStudentCredentials = [];
+
 /* =========================================
    HELPER: INJECT DATA & SHOW RESULT CARD
    ========================================= */
@@ -43,53 +46,90 @@ function showResultCard(apiData) {
         document.getElementById('student_parents').innerText = "Restricted Access";
     }
 
-// 3. Handle Profile Photo gracefully (with error fallback)
-   // 3. Handle Profile Photo gracefully (with error fallback)
+    // 3. Handle Profile Photo gracefully (Cache-Buster Included)
     const photoEl = document.getElementById('student_photo');
     
     photoEl.onerror = function() {
-        console.error("Image failed to load:", this.src);
         this.onerror = null; 
         this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=e8f5ec&color=1b5e20&size=150`;
     };
 
     let providedPic = apiData.profile_pic || apiData.photo_url;
     if (providedPic && providedPic !== "null" && providedPic.trim() !== "") {
-        // Point explicitly to the Flask server
         if (providedPic.startsWith('/static')) {
             providedPic = 'http://127.0.0.1:5000' + providedPic; 
         }
-        // Cache-buster: forces the browser to fetch the image fresh every single time
         photoEl.src = providedPic + "?v=" + new Date().getTime();
     } else {
         photoEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=e8f5ec&color=1b5e20&size=150`;
     }
-    // 4. Default credential states
-    document.getElementById('student_score').innerText = '--%';
-    document.getElementById('student_rank').innerText = '--';
 
-    // 5. Bulletproof Credential Extraction
-    if (apiData.credentials && apiData.credentials.length > 0) {
-        apiData.credentials.forEach(cred => {
-            const cat = (cred.category || "").toLowerCase();
-            const name = (cred.name || "").toLowerCase();
+    // 4. Setup Dynamic Credentials & Populate Dropdown
+    currentStudentCredentials = apiData.credentials || [];
+    const dropdown = document.getElementById('category_dropdown');
+    dropdown.innerHTML = '<option value="All">All Verified Records</option>'; // Reset dropdown on new search
 
-            // Catch any variation of Board / ICSE / CBSE
-            if (cat.includes('board') || name.includes('board') || name.includes('icse') || name.includes('cbse')) {
-                const val = cred.value.toString();
-                document.getElementById('student_score').innerText = val.includes('%') ? val : val + '%';
-            }
-            
-            // Catch any variation of Engineering / JEE
-            if (cat.includes('engineering') || name.includes('jee')) {
-                document.getElementById('student_rank').innerText = cred.value;
-            }
+    if (currentStudentCredentials.length > 0) {
+        // Extract unique categories (e.g., "Board Exam", "National Engineering")
+        const uniqueCategories = [...new Set(currentStudentCredentials.map(c => c.category).filter(Boolean))];
+        
+        uniqueCategories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.innerText = cat;
+            dropdown.appendChild(opt);
         });
     }
 
-    // 6. Reveal the green success card
+    // Trigger the initial render showing everything
+    renderCredentialBoxes("All");
+
+    // 5. Reveal the green success card
     document.getElementById('result_card').style.display = 'block';
 }
+
+/* =========================================
+   DYNAMIC CREDENTIAL RENDERER
+   ========================================= */
+
+function renderCredentialBoxes(filterCategory) {
+    const container = document.getElementById('dynamic_credentials');
+    container.innerHTML = ''; // Clear previous boxes
+
+    // Filter the array based on what the user selected in the dropdown
+    const filtered = filterCategory === "All" 
+        ? currentStudentCredentials 
+        : currentStudentCredentials.filter(c => c.category === filterCategory);
+
+    // Generate HTML for each credential box
+    filtered.forEach(cred => {
+        const box = document.createElement('div');
+        box.className = 'data-box';
+        
+        const label = document.createElement('div');
+        label.className = 'data-label';
+        label.innerText = (cred.name || "Credential").toUpperCase();
+
+        const val = document.createElement('div');
+        val.className = 'data-value';
+        
+        // Auto-append percentage signs for board scores if missing
+        let finalValue = cred.value.toString();
+        if (cred.category && cred.category.toLowerCase().includes('board') && !finalValue.includes('%')) {
+            finalValue += '%';
+        }
+        val.innerText = finalValue;
+
+        box.appendChild(label);
+        box.appendChild(val);
+        container.appendChild(box);
+    });
+}
+
+// Attach the event listener to the dropdown so it updates in real-time
+document.getElementById('category_dropdown').addEventListener('change', function(e) {
+    renderCredentialBoxes(e.target.value);
+});
 
 
 /* =========================================
@@ -193,5 +233,73 @@ async function testSSIVerification() {
     } catch (error) {
         alert("Error verifying SSI PIN: " + error.message);
         unlockBtn.innerText = "Unlock";
+    }
+}
+function resetToPreviousMenu() {
+    // 1. Hide Result Card
+    const resultCard = document.getElementById('result_card');
+    if (resultCard) resultCard.style.display = 'none';
+
+    // 2. Reset "Send OTP" Button
+    const sendOtpBtn = document.getElementById('send_otp_btn');
+    if (sendOtpBtn) {
+        sendOtpBtn.innerText = 'Send OTP';
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.className = 'action-btn';
+        sendOtpBtn.style.pointerEvents = 'auto';
+        sendOtpBtn.style.opacity = '1';
+        sendOtpBtn.style.cursor = 'pointer';
+        sendOtpBtn.style.backgroundColor = '';
+        sendOtpBtn.onclick = requestOTP;
+    }
+
+    // 3. Reset "Verify" Button
+    const verifyBtn = document.querySelector('#otp_entry_area .action-btn');
+    if (verifyBtn) {
+        verifyBtn.innerText = 'Verify';
+        verifyBtn.disabled = false;
+        verifyBtn.style.pointerEvents = 'auto';
+        verifyBtn.style.opacity = '1';
+        verifyBtn.style.cursor = 'pointer';
+        verifyBtn.style.backgroundColor = '#059669';
+        verifyBtn.onclick = testRemoteVerification;
+    }
+
+    // 4. Reset "Unlock" Button (In-Person PIN mode)
+    const unlockBtn = document.querySelector('#mode_pin .action-btn');
+    if (unlockBtn) {
+        unlockBtn.innerText = 'Unlock';
+        unlockBtn.disabled = false;
+        unlockBtn.style.pointerEvents = 'auto';
+        unlockBtn.style.opacity = '1';
+        unlockBtn.style.cursor = 'pointer';
+        unlockBtn.onclick = testSSIVerification;
+    }
+
+    // 5. Hide and clear the OTP input row
+    const otpArea = document.getElementById('otp_entry_area');
+    if (otpArea) otpArea.style.display = 'none';
+
+    const otpInput = document.getElementById('otpInput');
+    if (otpInput) {
+        otpInput.value = '';
+        otpInput.disabled = false;
+    }
+
+    // 6. Re-enable input fields
+    const apaarInput = document.getElementById('apaarInput');
+    if (apaarInput) apaarInput.disabled = false;
+
+    const pinInput = document.getElementById('pinInput');
+    if (pinInput) pinInput.disabled = false;
+
+    // 7. Restore active tab
+    const isPinActive = document.getElementById('tab_pin')?.classList.contains('active');
+    if (isPinActive) {
+        document.getElementById('mode_pin').style.display = 'block';
+        document.getElementById('mode_otp').style.display = 'none';
+    } else {
+        document.getElementById('mode_otp').style.display = 'block';
+        document.getElementById('mode_pin').style.display = 'none';
     }
 }
