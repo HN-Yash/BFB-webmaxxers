@@ -1,0 +1,16 @@
+# Python Caches & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Environment Variables (Security)
+.env
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# IDE Folders
+.vscode/
