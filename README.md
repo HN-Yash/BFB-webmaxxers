@@ -1,4 +1,4 @@
-# 🛡️ Zero Verification Node (2AM Purus)
+# 🛡️ Zero Verification Node
 
 A lightweight, dual-mode identity verification system designed to streamline physical and remote onboarding (e.g., university admissions, hostel reporting). It replaces manual paperwork with a secure, API-driven architecture featuring granular Self-Sovereign Identity (SSI) data consent.
 
