@@ -315,3 +315,55 @@ h2 {
     transform: scale(1.05);
 }
 
+.draw-tick {
+    stroke-dasharray: 32;
+    stroke-dashoffset: 32;
+    
+    transform-box: fill-box;
+    transform-origin: center;
+    
+    /* 3.8s loop with snappy modern easing */
+    animation: modernTickLoop 3.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes modernTickLoop {
+    0%, 10% {
+        stroke-dashoffset: 32;
+        opacity: 0;
+        transform: scale(0.94);
+        filter: drop-shadow(0 0 0 rgba(30, 94, 57, 0));
+    }
+    14% {
+        opacity: 1;
+        transform: scale(0.96);
+    }
+    /* Stroke completes: snappy pen flick + elastic pop + emerald bloom */
+    28% {
+        stroke-dashoffset: 0;
+        transform: scale(1.07);
+        filter: drop-shadow(0 2px 8px rgba(30, 94, 57, 0.45));
+    }
+    /* Settles naturally into resting position */
+    36% {
+        stroke-dashoffset: 0;
+        transform: scale(1);
+        filter: drop-shadow(0 0 0 rgba(30, 94, 57, 0));
+    }
+    /* Holds clean and stationary */
+    78% {
+        opacity: 1;
+        stroke-dashoffset: 0;
+        transform: scale(1);
+    }
+    /* Subtle dissolve out */
+    88% {
+        opacity: 0;
+        stroke-dashoffset: 0;
+        transform: scale(0.96);
+    }
+    100% {
+        stroke-dashoffset: 32;
+        opacity: 0;
+        transform: scale(0.94);
+    }
+}
