@@ -39,6 +39,37 @@
             width: 100%;
             position: relative;
         }
+        .title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .portal-logo {
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+
+        .title-wrapper h2 {
+            margin: 0;
+    padding: 0;
+    line-height: 1.15;
+    font-size: 40px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    transform: translateY(-12px);
+        }
+
+        .portal-subtitle {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #475569;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -48,6 +79,31 @@
     <div class="perspective-wrapper">
         <div class="container">
             <!-- Header and form content will go here -->
+             <div class="title-wrapper">
+                <svg class="portal-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Dual-Faceted Ribbons -->
+                    <polygon points="34,50 19,83 32,77 43,53" fill="#2f7a44" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    <polygon points="43,53 32,77 42,88 49,56" fill="#1b4e2b" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    <polygon points="51,56 58,88 68,77 57,53" fill="#1b4e2b" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    <polygon points="57,53 68,77 81,83 66,50" fill="#2f7a44" stroke="#13381e" stroke-width="0" stroke-linejoin="round" />
+                    
+                    <!-- White Gap Mask -->
+                    <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" 
+                             fill="#ffffff" stroke="#ffffff" stroke-width="10" stroke-linejoin="round" />
+
+                    <!-- 12-Point Rosette Body -->
+                    <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" 
+                             fill="#ffffff" stroke="#1e5e39" stroke-width="7" stroke-linejoin="round" />
+                    
+                    <!-- Center Checkmark -->
+                    <path d="M 40 42 L 46 48.5 L 60 33" stroke="#1e5e39" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                </svg>
+
+                <div>
+                    <h2>Authority Ledger</h2>
+                    <span class="portal-subtitle">Issuance Portal</span>
+                </div>
+            </div>
         </div>
     </div>
 
