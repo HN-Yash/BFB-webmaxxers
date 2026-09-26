@@ -79,5 +79,80 @@ def fetch_student_full_profile(student_id):
     profile = dict(student)
     profile["credentials"] = credentials
     return profile
+@app.route("/api/otp/generate", methods=["POST"])
+def generate_otp():
+    data = request.get_json()
+    apaar_id = data.get("apaar_id") if data else None
+
+    if not apaar_id:
+        return jsonify(
+            {"success": False, "message": "APAAR ID is required"}
+        ), 400
+
+    conn = get_db_connection()
+    student = conn.execute(
+        "SELECT full_name, email_id FROM students WHERE student_id = ?",
+        (apaar_id,),
+    ).fetchone()
+    conn.close()
+
+    if not student:
+        return jsonify(
+            {"success": False, "message": "Student record not found"}
+        ), 404
+
+    recipient_email = student["email_id"]
+    student_name = student["full_name"]
+
+    otp = str(random.randint(100000, 999999))
+    active_otps[apaar_id] = otp
+
+    print(f"\n==========================================")
+    print(f"[TERMINAL BACKUP] OTP for {apaar_id}: {otp}")
+    print(f"==========================================\n")
+
+    sent = send_otp_email(recipient_email, student_name, otp)
+
+    if sent:
+        return jsonify({
+            "success": True,
+            "message": f"OTP successfully sent to {recipient_email}",
+        }), 200
+    else:
+        return jsonify({
+            "success": True,
+            "message": f"Email dispatch failed. OTP printed to terminal console for testing.",
+        }), 200
+
+@app.route("/api/verify/remote", methods=["POST"])
+def verify_remote():
+    data = request.get_json()
+    apaar_id = data.get("apaar_id") if data else None
+    user_otp = data.get("otp") if data else None
+
+    if not apaar_id or not user_otp:
+        return jsonify(
+            {"success": False, "message": "Missing APAAR ID or OTP"}
+        ), 400
+
+    stored_otp = active_otps.get(apaar_id)
+
+    if not stored_otp or stored_otp != user_otp:
+        return jsonify(
+            {"success": False, "message": "Invalid or expired OTP"}
+        ), 401
+
+    profile = fetch_student_full_profile(apaar_id)
+
+    if profile is None:
+        return jsonify(
+            {"success": False, "message": "Student record not found"}
+        ), 404
+
+    del active_otps[apaar_id]
+
+    return jsonify(
+        {"success": True, "mode": "Remote OTP Verified", "data": profile}
+    ), 200
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
