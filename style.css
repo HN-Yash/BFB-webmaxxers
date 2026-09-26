@@ -44,9 +44,14 @@ body {
 }
 
 .main-logo {
-    width: 67px; /* Increased logo size */
-    height: 67px;
+    width: 120px; /* Increased logo size */
+    height: 120px;
     flex-shrink: 0;
+}
+#card{
+   width: 67px; /* Increased logo size */
+    height: 67px;
+    flex-shrink: 0; 
 }
 
 h2 {
@@ -58,7 +63,7 @@ h2 {
 }
 
 .subtitle {
-    font-size: 14px; /* Increased from 14px */
+    font-size: 20px; /* Increased from 14px */
     color: #475569;
     line-height: 1.5;
     margin-bottom: 28px;
@@ -89,7 +94,7 @@ h2 {
 }
 
 .toggle-btn.active {
-    background-color: #334155; 
+    background-color: #1e3a8a; 
     color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -259,4 +264,7 @@ h2 {
     font-size: 17px;
     font-weight: 700;
     color: #0f172a;
+}
+#card-title{
+    font-size: 20px
 }
