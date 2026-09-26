@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zero Verification Node</title>
     
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -15,18 +15,65 @@
         <div class="container" id="glass-card">
             
             <!-- Logo & Title Section -->
+            <!-- Logo & Title Section -->
             <div class="title-wrapper">
-                <svg class="main-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Ribbon Tails -->
-                <path d="M6 14L4.5 22L8 20L11.5 22V14" fill="#059669"/>
-                <path d="M18 14L19.5 22L16 20L12.5 22V14" fill="#059669"/>
-                <!-- Badge Circle -->
-                <circle cx="12" cy="10" r="9" fill="#10b981"/>
-                <!-- Checkmark -->
-                <path d="M7.5 10.5L10.5 13.5L16.5 7.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-                <h2>Zero Verification<br>Node</h2>
+                <!-- Logo & Title Section -->
+            <div class="title-wrapper">
+                <svg class="main-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Background Ribbons -->
+                    <polygon points="43,55 18,92 33,83 45,95" fill="#1e5e39" stroke="#7eb38a" stroke-width="3" stroke-linejoin="round" />
+                    <polygon points="57,55 82,92 67,83 55,95" fill="#1e5e39" stroke="#7eb38a" stroke-width="3" stroke-linejoin="round" />
+                    
+                    <!-- Scalloped Rosette (12-point) -->
+                    <polygon points="50,10 56.5,15.8 65,14 67.7,22.3 76,25 74.2,33.5 80,40 74.2,46.5 76,55 67.7,57.7 65,66 56.5,64.2 50,70 43.5,64.2 35,66 32.3,57.7 24,55 25.8,46.5 20,40 25.8,33.5 24,25 32.3,22.3 35,14 43.5,15.8" fill="#ffffff" stroke="#1e5e39" stroke-width="7" stroke-linejoin="round" />
+                    
+                    <!-- Thin Inner Circle -->
+                    <!-- <circle cx="50" cy="40" r="18" stroke="#7eb38a" stroke-width="2.5" fill="none" /> -->
+                    
+                    <!-- Center Checkmark -->
+                    <path d="M 36 42 L 45 51 L 64 30" stroke="#1e5e39" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                </svg>
+                
             </div>
+                <h2>Zero-Document<br>Verification Node</h2>
+            </div>
+             <p class="subtitle">#TAGLINE</p>
+
+            <!-- Verification Mode toggle -->
+            <div class="toggle-container">
+            <button class="toggle-btn active" id="tab_otp">Remote (OTP)</button>
+            <button class="toggle-btn" id="tab_pin">In-Person (PIN)</button>
+        </div>
+
+            <!-- ID Input area -->
+           <div class="input-section" id="mode_otp">
+            <label class="input-label">Enter Student APAAR ID</label>
+            <div class="search-bar-wrapper">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" id="apaar_input" value="APAAR1012" placeholder="APAAR ID">
+                <button class="action-btn" id="send_otp_btn">Send OTP</button>
+            </div>
+        </div>
+
+            <!-- Secondary Input Area Skeleton (Hidden initially) -->
+            <div id="mode_secondary" style="display: none;">
+                <label class="input-label">Enter Hardware PIN</label>
+                <div class="search-bar-wrapper">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    <input type="password" id="pin_input" placeholder="6-digit PIN" maxlength="6">
+                    <button id="verify_btn_pin">
+                        <span>Unlock</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Card Skeleton -->
+            <div id="result_card">
+                <!-- Data will be injected here via JS later -->
+            </div>
+
             
            
         </div>
