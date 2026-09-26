@@ -240,7 +240,11 @@ function resetToPreviousMenu() {
     const resultCard = document.getElementById('result_card');
     if (resultCard) resultCard.style.display = 'none';
 
-    // 2. Reset "Send OTP" Button
+    // 2. Restore Toggle Buttons Container
+    const toggleContainer = document.querySelector('.toggle-container');
+    if (toggleContainer) toggleContainer.style.display = 'flex';
+
+    // 3. Reset "Send OTP" Button
     const sendOtpBtn = document.getElementById('send_otp_btn');
     if (sendOtpBtn) {
         sendOtpBtn.innerText = 'Send OTP';
@@ -253,7 +257,7 @@ function resetToPreviousMenu() {
         sendOtpBtn.onclick = requestOTP;
     }
 
-    // 3. Reset "Verify" Button
+    // 4. Reset "Verify" Button
     const verifyBtn = document.querySelector('#otp_entry_area .action-btn');
     if (verifyBtn) {
         verifyBtn.innerText = 'Verify';
@@ -265,7 +269,7 @@ function resetToPreviousMenu() {
         verifyBtn.onclick = testRemoteVerification;
     }
 
-    // 4. Reset "Unlock" Button (In-Person PIN mode)
+    // 5. Reset "Unlock" Button (In-Person PIN mode)
     const unlockBtn = document.querySelector('#mode_pin .action-btn');
     if (unlockBtn) {
         unlockBtn.innerText = 'Unlock';
@@ -276,7 +280,7 @@ function resetToPreviousMenu() {
         unlockBtn.onclick = testSSIVerification;
     }
 
-    // 5. Hide and clear the OTP input row
+    // 6. Hide and clear the OTP input row
     const otpArea = document.getElementById('otp_entry_area');
     if (otpArea) otpArea.style.display = 'none';
 
@@ -286,14 +290,14 @@ function resetToPreviousMenu() {
         otpInput.disabled = false;
     }
 
-    // 6. Re-enable input fields
+    // 7. Re-enable input fields
     const apaarInput = document.getElementById('apaarInput');
     if (apaarInput) apaarInput.disabled = false;
 
     const pinInput = document.getElementById('pinInput');
     if (pinInput) pinInput.disabled = false;
 
-    // 7. Restore active tab
+    // 8. Restore active tab
     const isPinActive = document.getElementById('tab_pin')?.classList.contains('active');
     if (isPinActive) {
         document.getElementById('mode_pin').style.display = 'block';
