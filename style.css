@@ -24,17 +24,17 @@ body {
 }
 
 .container {
-    background: #ffffff;
-    padding: 45px; /* Slightly more padding to match new size */
+    background-color: #ffffff;
+
+    /* Shield pattern + fade toward bottom */
+    
+    padding: 45px;
     border-radius: 20px;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08); 
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
     width: 100%;
     position: relative;
 }
 
-/* =========================================
-   STEP 2: HEADER & SUBTITLE
-   ========================================= */
 
 .title-wrapper {
     display: flex;
@@ -65,9 +65,7 @@ h2 {
     padding-right: 10px;
 }
 
-/* =========================================
-   STEP 3: TOGGLE SWITCH & INPUT AREA
-   ========================================= */
+
 
 .toggle-container {
     display: flex;
@@ -154,4 +152,111 @@ h2 {
 
 .action-btn:hover {
     background-color: #1e40af;
+}
+
+.result-card {
+    background-color: #e8f5ec; /* Light mint green background */
+    border: 1px solid #bce3c8;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 24px;
+}
+
+/* Header inside the Result Card */
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #bce3c8;
+    padding-bottom: 16px;
+}
+
+/* "Identity & Records Verified" Text */
+.verified-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #1b5e20; /* Dark green text */
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.status-icon {
+    width: 22px;
+    height: 22px;
+}
+
+/* The Large Rosette Badge */
+.ribbon-badge {
+    width: 70px;
+    height: 70px;
+    margin-top: -10px; /* Pulls it up slightly to match image layout */
+}
+
+/* Profile Photo & Info Layout */
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+/* Student Image */
+.profile-img {
+    width: 75px;
+    height: 95px; /* Passport photo proportions */
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+/* Name and DOB text */
+.profile-details h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.profile-details p {
+    font-size: 14px;
+    color: #475569;
+}
+
+/* Grid for the 3 Data Boxes */
+.data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Individual Data Boxes */
+.data-box {
+    background-color: rgba(255, 255, 255, 0.4); /* Slight transparency */
+    border: 1px solid #1b5e20; /* Dark green border */
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+/* Makes the "Parents" box stretch all the way across */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Labels (e.g., "BOARD SCORE (ICSE)") */
+.data-label {
+    font-size: 13px;
+    color: #1b5e20; /* Dark green */
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* Values (e.g., "98.2%") */
+.data-value {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
 }
