@@ -151,9 +151,26 @@ document.getElementById('category_dropdown').addEventListener('change', function
    ========================================= */
 
 async function requestOTP() {
-    const apaarId = document.getElementById('apaarInput').value;
+    // 1. Grab the elements
+    const apaarInput = document.getElementById('apaarInput');
     const btn = document.getElementById('send_otp_btn');
     
+    // 2. Safety check: Did the HTML IDs get mixed up?
+    if (!apaarInput || !btn) {
+        console.error("Critical: Could not find the input or button in the HTML.");
+        return;
+    }
+
+    const apaarId = apaarInput.value.trim();
+
+    // 3. Prevent empty submissions
+    if (!apaarId) {
+        showToast("Please enter the student's APAAR ID first", "error");
+        apaarInput.focus();
+        return;
+    }
+    
+    // 4. Update UI to show progress
     btn.innerText = "Sending...";
     btn.disabled = true;
 
@@ -164,17 +181,24 @@ async function requestOTP() {
             body: JSON.stringify({ apaar_id: apaarId })
         });
 
-        const data = await response.json();
+        // Try to parse the JSON, but catch server crash HTML pages
+        let data;
+        try {
+            data = await response.json();
+        } catch (parseError) {
+            throw new Error("Server is down or returned an invalid response.");
+        }
         
         if (response.ok && data.success) {
             btn.innerText = "Sent!";
             document.getElementById('otp_entry_area').style.display = 'block';
+            showToast("OTP sent successfully!", "success");
         } else {
             throw new Error(data.message || "Failed to generate OTP");
         }
     } catch (error) {
-        showToast("Error requesting OTP: " + error.message, "error");
-        btn.innerText = "Send OTP";
+        showToast("Error: " + error.message, "error");
+        btn.innerText = "Send OTP to Email";
         btn.disabled = false;
     }
 }
