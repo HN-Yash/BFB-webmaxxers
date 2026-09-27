@@ -1,6 +1,6 @@
 # 🛡️ Zero Verification Node
 
-A lightweight, dual-mode identity verification system designed to streamline physical and remote onboarding (e.g., university admissions, hostel reporting). It replaces manual paperwork with a secure, API-driven architecture featuring granular Self-Sovereign Identity (SSI) data consent.
+A lightweight, dual-mode identity verification system designed to streamline physical and remote onboarding (e.g., university admissions, hostel reporting). It replaces manual paperwork with a secure, API-driven architecture featuring granular Self-Sovereign Identity (SSI) inspired data consent.
 
 ## ✨ Core Features
 
@@ -45,7 +45,7 @@ A lightweight, dual-mode identity verification system designed to streamline phy
 
 2. Install backend dependencies:
   Bash:-
-  pip install Flask flask-cors
+  pip install Flask flask-cors python-dotenv
 
 ### Database Initialization
 
