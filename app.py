@@ -6,9 +6,17 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+# The new, secure way
+import os
+from dotenv import load_dotenv
 
-SENDER_EMAIL = "chinmayjois223@gmail.com"
-SENDER_PASSWORD = "odbmcktvjgumdaty"  # 16-character app password without spaces
+load_dotenv()
+print(f"DEBUG EMAIL: '{os.getenv('SENDER_EMAIL')}'")
+print(f"DEBUG PASS: '{os.getenv('SENDER_PASSWORD')}'")
+# This pulls the data out of the file securely
+SENDER_EMAIL = os.getenv("SENDER_EMAIL")
+SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+
 app = Flask(__name__)
 CORS(app)
 
