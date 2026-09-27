@@ -12,6 +12,19 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
+        /* Authority Gate Box */
+.auth-gate {
+    background: #f8fafc;
+    border: 1px dashed #94a3b8;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.auth-gate-row {
+    display: flex;
+    gap: 10px;
+}
 
         /* Solid Canvas Background */
         body {
@@ -70,6 +83,109 @@
             color: #475569;
             margin-top: 4px;
         }
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+
+        input, select {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 13px 16px;
+            font-size: 16px;
+            color: #0f172a;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+        }
+
+        /* Mint Green Verification Badge */
+        .verification-badge {
+            display: none;
+            background-color: #e8f5ec;
+            border: 1px solid #bce3c8;
+            color: #1b5e20;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+            margin-top: 8px;
+            animation: slideDown 0.2s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .draw-tick {
+    stroke-dasharray: 32;
+    stroke-dashoffset: 32;
+    
+    transform-box: fill-box;
+    transform-origin: center;
+    
+    /* 3.8s loop with snappy modern easing */
+    animation: modernTickLoop 3.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes modernTickLoop {
+    0%, 10% {
+        stroke-dashoffset: 32;
+        opacity: 0;
+        transform: scale(0.94);
+        filter: drop-shadow(0 0 0 rgba(30, 94, 57, 0));
+    }
+    14% {
+        opacity: 1;
+        transform: scale(0.96);
+    }
+    /* Stroke completes: snappy pen flick + elastic pop + emerald bloom */
+    28% {
+        stroke-dashoffset: 0;
+        transform: scale(1.07);
+        filter: drop-shadow(0 2px 8px rgba(30, 94, 57, 0.45));
+    }
+    /* Settles naturally into resting position */
+    36% {
+        stroke-dashoffset: 0;
+        transform: scale(1);
+        filter: drop-shadow(0 0 0 rgba(30, 94, 57, 0));
+    }
+    /* Holds clean and stationary */
+    78% {
+        opacity: 1;
+        stroke-dashoffset: 0;
+        transform: scale(1);
+    }
+    /* Subtle dissolve out */
+    88% {
+        opacity: 0;
+        stroke-dashoffset: 0;
+        transform: scale(0.96);
+    }
+    100% {
+        stroke-dashoffset: 32;
+        opacity: 0;
+        transform: scale(0.94);
+    }
+}
     </style>
 </head>
 <body>
@@ -96,13 +212,39 @@
                              fill="#ffffff" stroke="#1e5e39" stroke-width="7" stroke-linejoin="round" />
                     
                     <!-- Center Checkmark -->
-                    <path d="M 40 42 L 46 48.5 L 60 33" stroke="#1e5e39" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    <path d="M 40 42 L 46 48.5 L 60 33" class="draw-tick" stroke="#1e5e39" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                 </svg>
 
                 <div>
-                    <h2>Authority Ledger</h2>
-                    <span class="portal-subtitle">Issuance Portal</span>
+                    <h2>Zero-Document<br>Verification Node</h2>
+                    
                 </div>
+                
+            </div>
+            <!-- Form Input Fields -->
+            <!-- Authority Key Login -->
+<div class="auth-gate">
+    <label class="input-label">Authority Node Token / Key</label>
+    <div class="auth-gate-row">
+        <input type="password" id="authority_key_input" placeholder="e.g., AUTH_KEY_NTA_9921" style="font-family: monospace;">
+        <button type="button" class="action-btn" id="verify_node_btn" style="width: auto; padding: 0 20px; margin-top: 0; white-space: nowrap; border-radius: 12px;">Verify Node</button>
+    </div>
+</div>
+
+            <div class="input-group">
+                <label class="input-label">Student APAAR ID</label>
+                <input type="text" id="student_id_input" placeholder="e.g., APAAR1001" oninput="lookupStudentName()">
+                <div id="name_preview_badge" class="verification-badge"></div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Credential Title</label>
+                <input type="text" id="cred_name_input" placeholder="e.g., JEE ADVANCED RANK">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Credential Value</label>
+                <input type="text" id="cred_val_input" placeholder="e.g., AIR 142">
             </div>
         </div>
     </div>
