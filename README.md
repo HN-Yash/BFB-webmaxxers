@@ -9,7 +9,7 @@ A lightweight, dual-mode identity verification system designed to streamline phy
   * **In-Person (Edge SSI):** Cryptographic PIN-based verification for physical desks.
 * **Granular Privacy Controls:** Students control their data payload via the mobile wallet, choosing to share "Core Identity" only, or including "Academic Records" (Zero-Knowledge principles).
 * **Time-Sensitive Access:** Edge PINs auto-expire after 5 minutes with a dynamic UI state.
-* **Frictionless UI:** Glassmorphic mobile wallet design with native-feeling interactions and a dark-mode optimized verification node dashboard.
+* **Frictionless UI:** Glassmorphic mobile wallet design with native-feeling interactions 
 
 ## 🛠️ Tech Stack
 
