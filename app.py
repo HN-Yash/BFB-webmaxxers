@@ -247,8 +247,12 @@ def verify_ssi():
     if wallet_permissions.get("academic_records", True):
         filtered_data["credentials"] = full_profile["credentials"]
     else:
-        filtered_data["credentials"] = []
-
+        # Academic is OFF. If Core is ON, force ONLY the 10th and 12th records to pass through.
+        if wallet_permissions.get("core_identity", True):
+            filtered_data["credentials"] = [c for c in full_profile["credentials"] if "10" in str(c) or "12" in str(c)]
+        else:
+            filtered_data["credentials"] = []
+            
     # Consume the PIN so it cannot be reused
     del active_pins[apaar_id]
 
@@ -257,5 +261,6 @@ def verify_ssi():
         "mode": "SSI Wallet PIN Verified",
         "data": filtered_data,
     }), 200
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
