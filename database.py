@@ -81,57 +81,69 @@ sample_credentials = [
     ("APAAR1002", "NTA", "NEET UG Rank", "Medical", "8502", "Verified"),
     
     # Rohan Verma (Arts/Science focus)
+    ("APAAR1003", "UP Board", "10th Board Score", "Board Exam", "86.2%", "Verified"),
     ("APAAR1003", "UP Board", "12th Board Score", "Board Exam", "88.5%", "Verified"),
     ("APAAR1003", "NTA", "CUET Percentile", "National Arts/Science", "99.1", "Verified"),
 
     # Ananya Iyer (Engineering + State)
+    ("APAAR1004", "TN State Board", "10th Board Score", "Board Exam", "97.5%", "Verified"),
     ("APAAR1004", "TN State Board", "12th Board Score", "Board Exam", "99.0%", "Verified"),
     ("APAAR1004", "Anna University", "TNEA Rank", "State Engineering", "112", "Verified"),
     ("APAAR1004", "NTA", "JEE Mains Percentile", "National Engineering", "94.5", "Verified"),
 
     # Vikram Singh (Basic Boards)
+    ("APAAR1005", "HPBOSE", "10th Board Score", "Board Exam", "82.4%", "Verified"),
     ("APAAR1005", "HPBOSE", "12th Board Score", "Board Exam", "85.2%", "Verified"),
 
     # Sanya Gupta (Medical + State)
+    ("APAAR1006", "CBSE", "10th Board Score", "Board Exam", "95.8%", "Verified"),
     ("APAAR1006", "CBSE", "12th Board Score", "Board Exam", "97.1%", "Verified"),
     ("APAAR1006", "NTA", "NEET UG Rank", "Medical", "3201", "Verified"),
     
     # Rahul Das (Engineering)
+    ("APAAR1007", "WBBSE", "10th Board Score", "Board Exam", "89.5%", "Verified"),
     ("APAAR1007", "WBCHSE", "12th Board Score", "Board Exam", "91.8%", "Verified"),
     ("APAAR1007", "WBJEEB", "WBJEE Rank", "State Engineering", "890", "Verified"),
 
     # Meera Nair (Arts/Science)
+    ("APAAR1008", "Kerala KBPE", "10th Board Score", "Board Exam", "94.0%", "Verified"),
     ("APAAR1008", "Kerala DHSE", "12th Board Score", "Board Exam", "96.5%", "Verified"),
     ("APAAR1008", "NTA", "CUET Percentile", "National Arts/Science", "98.8", "Verified"),
 
     # Aditya Joshi (Engineering)
+    ("APAAR1009", "Maharashtra SSC", "10th Board Score", "Board Exam", "91.2%", "Verified"),
     ("APAAR1009", "Maharashtra HSC", "12th Board Score", "Board Exam", "93.4%", "Verified"),
     ("APAAR1009", "State CET Cell", "MHT CET Percentile", "State Engineering", "99.4", "Verified"),
     ("APAAR1009", "NTA", "JEE Mains Percentile", "National Engineering", "97.2", "Verified"),
 
     # Neha Reddy (Medical)
+    ("APAAR1010", "BSE Telangana", "10th Board Score", "Board Exam", "96.4%", "Verified"),
     ("APAAR1010", "TSBIE", "12th Board Score", "Board Exam", "98.5%", "Verified"),
     ("APAAR1010", "NTA", "NEET UG Rank", "Medical", "1540", "Verified"),
 
     # Karan Mehta (Commerce/Management)
+    ("APAAR1011", "CBSE", "10th Board Score", "Board Exam", "92.8%", "Verified"),
     ("APAAR1011", "CBSE", "12th Board Score", "Board Exam", "94.2%", "Verified"),
     ("APAAR1011", "NTA", "CUET Percentile", "National Arts/Science", "96.5", "Verified"),
 
     # Pooja Choudhury (Engineering)
+    ("APAAR1012", "SEBA", "10th Board Score", "Board Exam", "87.3%", "Verified"),
     ("APAAR1012", "AHSEC", "12th Board Score", "Board Exam", "89.9%", "Verified"),
     ("APAAR1012", "DTE Assam", "Assam CEE Rank", "State Engineering", "450", "Verified"),
 
     # Devendra Yadav (Medical)
+    ("APAAR1013", "BSEB", "10th Board Score", "Board Exam", "84.1%", "Verified"),
     ("APAAR1013", "BSEB", "12th Board Score", "Board Exam", "87.6%", "Verified"),
     ("APAAR1013", "NTA", "NEET UG Rank", "Medical", "12450", "Verified"),
 
     # Tanvi Bhat (Engineering Focus - Karnataka)
-    ("APAAR1014", "Karnataka PU Board", "10th Board Score", "Board Exam", "95.0%", "Verified"),
+    ("APAAR1014", "Karnataka KSEAB", "10th Board Score", "Board Exam", "95.0%", "Verified"),
     ("APAAR1014", "Karnataka PU Board", "12th Board Score", "Board Exam", "97.5%", "Verified"),
     ("APAAR1014", "KEA", "KCET Rank", "State Engineering", "850", "Verified"),
     ("APAAR1014", "COMEDK", "COMEDK UGET Rank", "State Engineering", "1205", "Verified"),
 
     # Mohammed Zaid (Engineering)
+    ("APAAR1015", "UP Board", "10th Board Score", "Board Exam", "90.5%", "Verified"),
     ("APAAR1015", "UP Board", "12th Board Score", "Board Exam", "92.3%", "Verified"),
     ("APAAR1015", "NTA", "JEE Mains Percentile", "National Engineering", "96.8", "Verified")
 ]
