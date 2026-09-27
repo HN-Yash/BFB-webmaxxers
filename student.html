@@ -195,8 +195,9 @@
                 }
             };
 
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/verify/ssi`, {
+           try {
+                // Point to the new PIN generation route
+                const response = await fetch(`${BACKEND_URL}/api/wallet/generate_pin`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -207,11 +208,11 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    displayPin.textContent = "987654";
-                    outputMsg.textContent = "Verified Successfully via SSI!";
-                    countdownEl.textContent = "Access Granted & Logged";
+                    // Display the dynamic PIN returned by the server
+                    displayPin.textContent = result.pin;
+                    outputMsg.textContent = "Time-sensitive PIN generated!";
+                    countdownEl.textContent = "Hand this PIN to the verification desk";
 
-                    // Dynamically add a successful record to the Audit Trail
                     const now = new Date().toLocaleTimeString();
                     const auditItem = document.createElement("div");
                     auditItem.className = "audit-item";
@@ -220,10 +221,9 @@
                             <h4>NITK Surathkal - Admissions Desk</h4>
                             <p>${apaarId} • ${now}</p>
                         </div>
-                        <span class="status-badge">Verified</span>
+                        <span class="status-badge">Authorized</span>
                     `;
 
-                    // Remove placeholder text if it's the first audit log
                     const placeholder = auditTrail.querySelector("p");
                     if (placeholder && placeholder.textContent.includes("No active verifications")) {
                         auditTrail.innerHTML = "";
@@ -233,7 +233,7 @@
 
                 } else {
                     displayPin.textContent = "FAILED";
-                    outputMsg.textContent = result.message || "Verification rejected.";
+                    outputMsg.textContent = result.message || "Could not generate PIN.";
                     countdownEl.textContent = "Access Denied";
                 }
 
@@ -248,3 +248,5 @@
     </script>
 </body>
 </html>
+
+
