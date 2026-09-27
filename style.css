@@ -414,3 +414,41 @@ body.dark-mode .return-btn:hover {
     border-color: #059669;
     color: #ffffff;
 }
+
+/* =========================================
+   TOAST NOTIFICATIONS
+   ========================================= */
+#toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+}
+
+.toast {
+    background-color: #ffffff;
+    color: #0f172a;
+    padding: 14px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    font-size: 15px;
+    font-weight: 600;
+    border-left: 5px solid #ef4444; /* Default to error red */
+    opacity: 0;
+    transform: translateX(100%);
+    animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, fadeOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards 3.6s;
+}
+
+.toast.success { border-left-color: #10b981; } /* Green */
+.toast.info { border-left-color: #3b82f6; }    /* Blue */
+
+@keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateX(100%); }
+}
