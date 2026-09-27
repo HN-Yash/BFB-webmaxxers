@@ -177,16 +177,28 @@
 
 
 <div class="data-grid">
-    <!-- The JavaScript will spawn the credential boxes inside this container -->
+    <!-- Always-Visible Education Boxes -->
+    <div class="data-box">
+        <div class="data-label">10TH BOARD</div>
+        <div class="data-value" id="student_10th">Restricted Access</div>
+    </div>
+    <div class="data-box">
+        <div class="data-label">12TH BOARD</div>
+        <div class="data-value" id="student_12th">Restricted Access</div>
+    </div>
+
+    <!-- The JavaScript will spawn the remaining credential boxes inside this container -->
     <div id="dynamic_credentials" style="display: contents;"></div>    
+    
     <!-- The Parents box remains hardcoded at the bottom as a full-width element -->
     <div class="data-box full-width">
         <div class="data-label">PARENTS</div>
         <div class="data-value" id="student_parents">Restricted Access</div>
     </div>
+    
     <button id="download_hr_copy" style="display: none; width: 100%; background: #0f172a; color: white; border: none; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; margin-top: 20px;">
-    📄 Download Verification Copy
-</button>
+        📄 Download Verification Copy
+    </button>
 </div>
 <!-- Return / Verify Another Button -->
             <button class="return-btn" id="btn_back" onclick="resetToPreviousMenu()">
