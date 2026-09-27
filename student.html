@@ -6,99 +6,220 @@
     <title>APAAR Student Wallet</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        
+
+        html, body { min-height: 100dvh; }
+
+        .mobile-frame {
+            height: 100dvh;
+            max-height: 850px;
+        }
+
         body {
-            background-color: #f1f5f9;
+            background:
+                radial-gradient(circle at 20% 15%, rgba(12, 62, 135, 0.35), transparent 45%),
+                radial-gradient(circle at 85% 20%, rgba(47, 122, 68, 0.30), transparent 50%),
+                radial-gradient(circle at 50% 95%, rgba(30, 94, 57, 0.25), transparent 55%),
+                linear-gradient(160deg, #0a1f3d 0%, #0c3e87 55%, #0d3320 100%);
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 24px 12px;
         }
 
-        /* Simulating a Mobile Device Screen */
+        /* Ambient glow orbs behind the glass frame */
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            z-index: 0;
+            pointer-events: none;
+        }
+        body::before {
+            width: 300px; height: 300px;
+            top: -60px; left: -60px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        body::after {
+            width: 260px; height: 260px;
+            bottom: -50px; right: -50px;
+            background: rgba(16, 185, 129, 0.20);
+        }
+
+        /* Simulating a Mobile Device Screen — now a glass frame */
         .mobile-frame {
             width: 100%;
             max-width: 400px;
             height: 100vh;
             max-height: 850px;
-            background: white;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            z-index: 1;
         }
 
         @media (min-width: 450px) {
-            .mobile-frame { height: 90vh; border-radius: 40px; border: 8px solid #0f172a; }
+            .mobile-frame { height: 90vh; border-radius: 40px; border: 1px solid rgba(255,255,255,0.35); }
         }
 
-        /* Top Navigation / Profile */
+        /* Top Navigation / Profile — glass panel over gradient */
         .header {
-            background: #0c3e87;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             padding: 40px 25px 25px;
             border-bottom-left-radius: 25px;
             border-bottom-right-radius: 25px;
         }
 
-        .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
-        .header p { font-size: 14px; opacity: 0.8; }
-        .badge { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 12px; display: inline-block; margin-top: 10px; }
+        .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 5px; text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+        .header p { font-size: 14px; opacity: 0.85; }
+        .badge {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        #wallet_apaar_id {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            outline: none;
+            margin-top: 8px;
+        }
+        #wallet_apaar_id::placeholder { color: rgba(255, 255, 255, 0.55); }
 
         /* Main Content */
         .content { padding: 25px; flex-grow: 1; }
-        .section-title { font-size: 14px; color: #64748b; text-transform: uppercase; font-weight: 600; margin-bottom: 15px; letter-spacing: 0.5px; }
+        .section-title {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.65);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: 0.6px;
+        }
 
-        /* Active Connection Card */
+        /* Active Connection Card — frosted glass */
         .card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 18px;
             padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
             margin-bottom: 25px;
         }
 
         .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .icon-box { width: 40px; height: 40px; background: #e0e7ff; color: #3a71c9; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .icon-box {
+            width: 40px; height: 40px;
+            background: rgba(58, 113, 201, 0.16);
+            border: 1px solid rgba(58, 113, 201, 0.25);
+            color: #3a71c9;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
         .card-header h3 { font-size: 17px; color: #0f172a; }
         .card-header p { font-size: 13px; color: #64748b; }
 
         /* iOS Style Toggles for Selective Disclosure */
-        .data-toggle { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid #f1f5f9; }
+        .data-toggle { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 1px solid rgba(15, 23, 42, 0.06); }
         .data-toggle:first-of-type { border-top: none; }
         .toggle-label { font-size: 15px; color: #334155; font-weight: 500; }
         .toggle-sub { font-size: 12px; color: #94a3b8; display: block; margin-top: 2px; }
-        
+
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        input:checked + .slider { background-color: #10b981; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(203, 213, 225, 0.7);
+            backdrop-filter: blur(4px);
+            transition: .3s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px;
+            background-color: white; transition: .3s; border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider { background-color: rgba(16, 185, 129, 0.85); }
         input:checked + .slider:before { transform: translateX(20px); }
         input:disabled + .slider { opacity: 0.5; cursor: not-allowed; }
 
-        /* Generate Button */
+        /* Generate Button — glassy accent */
         button {
-            width: 100%; background: #0c3e87; color: white; border: none; padding: 15px;
-            font-size: 16px; font-weight: 600; border-radius: 12px; cursor: pointer; margin-top: 15px;
-            transition: background 0.3s;
+            width: 100%;
+            background: rgba(12, 62, 135, 0.85);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s, transform 0.15s ease;
         }
-        button:active { background: #082f6b; }
+        button:hover { transform: translateY(-1px); }
+        button:active { background: rgba(8, 47, 107, 0.9); transform: translateY(0); }
 
         /* Dynamic Token Output */
         #token_output {
-            display: none; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1; animation: fadeIn 0.4s ease-out;
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            border-top: 1px dashed rgba(15, 23, 42, 0.15);
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            animation: fadeIn 0.4s ease-out;
         }
         .pin-display { font-size: 32px; font-weight: 800; color: #0c3e87; letter-spacing: 5px; margin: 10px 0; }
         .timer { font-size: 13px; color: #ef4444; font-weight: 600; }
 
         /* Audit Trail */
-        .audit-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+        .audit-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 14px; margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+        }
         .audit-info h4 { font-size: 14px; color: #334155; }
         .audit-info p { font-size: 12px; color: #94a3b8; }
-        .status-badge { background: #dcfce7; color: #166534; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px; }
+        .status-badge {
+            background: rgba(220, 252, 231, 0.8);
+            color: #166534;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -109,13 +230,13 @@
         <div class="header">
             <h1>Student Wallet</h1>
             <p style="margin-bottom: 8px;">Enter ID to link wallet:</p>
-            <input type="text" id="wallet_apaar_id" value="APAAR1001" style="width: 100%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 10px 15px; border-radius: 8px; font-size: 15px; font-weight: 600; outline: none;" placeholder="e.g., APAAR1001">
+            <input type="text" id="wallet_apaar_id" value="APAAR1001" placeholder="e.g., APAAR1001">
             <div class="badge">Verified Identity Level 3</div>
         </div>
 
         <div class="content">
             <h2 class="section-title">Pending Authorization</h2>
-            
+
             <div class="card">
                 <div class="card-header">
                     <div class="icon-box">
@@ -156,7 +277,7 @@
             <h2 class="section-title" style="margin-top: 30px;">Access Ledger</h2>
             <div id="audit_trail">
                 <!-- Dynamically populated verification results go here -->
-                <p style="font-size: 13px; color: #94a3b8; text-align: center; padding: 10px 0;">No active verifications logged yet.</p>
+                <p style="font-size: 13px; color: rgba(255,255,255,0.6); text-align: center; padding: 10px 0;">No active verifications logged yet.</p>
             </div>
         </div>
     </div>
@@ -169,7 +290,7 @@
             const apaarId = document.getElementById("wallet_apaar_id").value.trim();
             const corePermission = document.getElementById("perm_core").checked;
             const academicPermission = document.getElementById("perm_academic").checked;
-            
+
             const tokenOutput = document.getElementById("token_output");
             const displayPin = document.getElementById("display_pin");
             const outputMsg = document.getElementById("output_msg");
@@ -189,7 +310,7 @@
             // Default mock wallet PIN accepted by your backend /api/verify/ssi route
             const payload = {
                 apaar_id: apaarId,
-                pin: "987654", 
+                pin: "987654",
                 permissions: {
                     core_identity: corePermission,
                     academic_records: academicPermission
@@ -216,17 +337,17 @@
 
     // --- START TIMER LOGIC ---
     if (countdownInterval) clearInterval(countdownInterval); // Reset if already running
-    
+
     let timeLeft = 300; // 5 minutes in seconds
-    
+
     const updateTimer = () => {
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
         const timeString = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        
+
         // Combine your message with the live timer
         countdownEl.innerHTML = `Hand this PIN to the verification desk<br><span style="font-size: 16px; margin-top: 8px; display: inline-block; color: #ef4444;">Expires in: ${timeString}</span>`;
-        
+
         if (timeLeft <= 0) {
             clearInterval(countdownInterval);
             displayPin.textContent = "EXPIRED";
@@ -235,7 +356,7 @@
         }
         timeLeft--;
     };
-    
+
     updateTimer(); // Run immediately so it doesn't wait 1 second to show
     countdownInterval = setInterval(updateTimer, 1000); // Tick every second
     // --- END TIMER LOGIC ---
@@ -255,7 +376,7 @@
     if (placeholder && placeholder.textContent.includes("No active verifications")) {
         auditTrail.innerHTML = "";
     }
-    
+
     auditTrail.prepend(auditItem);
 
 } else {
@@ -275,5 +396,3 @@
     </script>
 </body>
 </html>
-
-
