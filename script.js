@@ -46,7 +46,19 @@ function showResultCard(apiData, mode) {
     } else {
         document.getElementById('student_parents').innerText = "Restricted Access";
     }
+// 1. Grab the array from the backend
+    const allCreds = apiData.credentials || [];
+    
+    // 2. Find the 10th and 12th records
+    const tenthRecord = allCreds.find(c => (c.credential_name || c.name || c.category || "").includes("10"));
+    const twelfthRecord = allCreds.find(c => (c.credential_name || c.name || c.category || "").includes("12"));
 
+    // 3. Inject the BOARD NAME (Issuer) into the top boxes instead of the score
+    document.getElementById('student_10th').innerText = tenthRecord ? (tenthRecord.issuer || "Verified") : "Not Available";
+    document.getElementById('student_12th').innerText = twelfthRecord ? (twelfthRecord.issuer || "Verified") : "Not Available";
+
+    // 4. We purposefully do NOT filter them out of apiData.credentials here.
+    // This allows the actual scores to render normally in the dynamic grid below!
     // 3. Handle Profile Photo gracefully
     const photoEl = document.getElementById('student_photo');
     photoEl.onerror = function() {
