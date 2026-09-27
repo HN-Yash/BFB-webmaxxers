@@ -163,6 +163,7 @@
 
     <script>
         const BACKEND_URL = "http://127.0.0.1:5000";
+        let countdownInterval;
 
         async function generateToken() {
             const apaarId = document.getElementById("wallet_apaar_id").value.trim();
@@ -208,30 +209,56 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    // Display the dynamic PIN returned by the server
-                    displayPin.textContent = result.pin;
-                    outputMsg.textContent = "Time-sensitive PIN generated!";
-                    countdownEl.textContent = "Hand this PIN to the verification desk";
+    // Display the dynamic PIN returned by the server
+    displayPin.textContent = result.pin;
+    displayPin.style.color = "#0c3e87"; // Ensure it's the default blue
+    outputMsg.textContent = "Time-sensitive PIN generated!";
 
-                    const now = new Date().toLocaleTimeString();
-                    const auditItem = document.createElement("div");
-                    auditItem.className = "audit-item";
-                    auditItem.innerHTML = `
-                        <div class="audit-info">
-                            <h4>NITK Surathkal - Admissions Desk</h4>
-                            <p>${apaarId} • ${now}</p>
-                        </div>
-                        <span class="status-badge">Authorized</span>
-                    `;
+    // --- START TIMER LOGIC ---
+    if (countdownInterval) clearInterval(countdownInterval); // Reset if already running
+    
+    let timeLeft = 300; // 5 minutes in seconds
+    
+    const updateTimer = () => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        const timeString = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        
+        // Combine your message with the live timer
+        countdownEl.innerHTML = `Hand this PIN to the verification desk<br><span style="font-size: 16px; margin-top: 8px; display: inline-block; color: #ef4444;">Expires in: ${timeString}</span>`;
+        
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            displayPin.textContent = "EXPIRED";
+            displayPin.style.color = "#ef4444"; // Turn red on expiration
+            countdownEl.innerHTML = "PIN Expired. Please request a new one.";
+        }
+        timeLeft--;
+    };
+    
+    updateTimer(); // Run immediately so it doesn't wait 1 second to show
+    countdownInterval = setInterval(updateTimer, 1000); // Tick every second
+    // --- END TIMER LOGIC ---
 
-                    const placeholder = auditTrail.querySelector("p");
-                    if (placeholder && placeholder.textContent.includes("No active verifications")) {
-                        auditTrail.innerHTML = "";
-                    }
-                    
-                    auditTrail.prepend(auditItem);
+    const now = new Date().toLocaleTimeString();
+    const auditItem = document.createElement("div");
+    auditItem.className = "audit-item";
+    auditItem.innerHTML = `
+        <div class="audit-info">
+            <h4>NITK Surathkal - Admissions Desk</h4>
+            <p>${apaarId} • ${now}</p>
+        </div>
+        <span class="status-badge">Authorized</span>
+    `;
 
-                } else {
+    const placeholder = auditTrail.querySelector("p");
+    if (placeholder && placeholder.textContent.includes("No active verifications")) {
+        auditTrail.innerHTML = "";
+    }
+    
+    auditTrail.prepend(auditItem);
+
+} else {
                     displayPin.textContent = "FAILED";
                     outputMsg.textContent = result.message || "Could not generate PIN.";
                     countdownEl.textContent = "Access Denied";

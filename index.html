@@ -54,64 +54,64 @@
             </div>
              <p class="subtitle">Get Verified. Skip the paperwork</p>
 
-            <!-- Verification Mode toggle -->
-            <div class="toggle-container">
-            <button class="toggle-btn active" id="tab_otp">Remote (OTP)</button>
-            <button class="toggle-btn" id="tab_pin">In-Person (PIN)</button>
-        </div>
-
-            <!-- ID Input area -->
-           <!-- Mode 1: Remote OTP Flow -->
-        <div class="input-section" id="mode_otp">
-            <label class="input-label">Enter Student APAAR ID</label>
-            <div class="search-bar-wrapper">
-                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-                <input type="text" id="apaarInput" value="APAAR1001" placeholder="APAAR ID">
-                <!-- Linked to requestOTP() -->
-                <button class="action-btn" id="send_otp_btn" onclick="requestOTP()">Send OTP</button>
-            </div>
-
-            <!-- OTP Entry Area (Hidden until Send OTP is clicked) -->
-            <div id="otp_entry_area" style="display: none; margin-top: 20px;">
-                <label class="input-label">Enter OTP from Email</label>
+            <!-- SHARED APAAR ID INPUT (Visible in both modes) -->
+            <div class="input-section" style="margin-bottom: 24px;">
+                <label class="input-label">Student APAAR ID</label>
                 <div class="search-bar-wrapper">
                     <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <input type="text" id="otpInput" placeholder="e.g. 123456">
-                    <!-- Linked to testRemoteVerification() -->
-                    <button class="action-btn" onclick="testRemoteVerification()" style="background-color: #059669;">Verify</button>
+                    <input type="text" id="apaarInput" placeholder="e.g. APAAR1001">
                 </div>
             </div>
-        </div>
 
-        <!-- Mode 2: In-Person (PIN) Flow -->
-        <div class="input-section" id="mode_pin" style="display: none;">
-            <label class="input-label">Student Pin</label>
-            <div class="search-bar-wrapper" style="margin-bottom: 16px;">
-                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
-                </svg>
-                <input type="password" id="pinInput" value="987654" placeholder="6-digit PIN">
-                <!-- Linked to testSSIVerification() -->
-                <button class="action-btn" onclick="testSSIVerification()">Unlock</button>
+            <!-- Verification Mode toggle -->
+            <div class="toggle-container">
+                <button class="toggle-btn active" id="tab_otp">Remote (OTP)</button>
+                <button class="toggle-btn" id="tab_pin">In-Person (PIN)</button>
             </div>
 
-            <!-- Granular Consent Checkboxes -->
-            <div style="background: rgba(255,255,255,0.6); padding: 12px 16px; border-radius: 12px; border: 1px solid #cbd5e1;">
-                <p class="input-label" style="margin-bottom: 10px; font-size: 12px;">Granular Consent Permissions:</p>
-                <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #0f172a; margin-bottom: 8px; cursor: pointer;">
-                    <input type="checkbox" id="checkCore" checked style="width: 16px; height: 16px;"> 
-                    Core Identity (Name, DOB, State)
-                </label>
-                <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #0f172a; cursor: pointer;">
-                    <input type="checkbox" id="checkAcademic" checked style="width: 16px; height: 16px;"> 
-                    Academic Credentials Ledger
-                </label>
+            <!-- Mode 1: Remote OTP Flow -->
+            <div class="input-section" id="mode_otp">
+                <button class="action-btn" id="send_otp_btn" onclick="requestOTP()" style="width: 100%; margin-bottom: 16px;">Send OTP to Email</button>
+
+                <!-- OTP Entry Area (Hidden until Send OTP is clicked) -->
+                <div id="otp_entry_area" style="display: none;">
+                    <label class="input-label">Enter OTP from Email</label>
+                    <div class="search-bar-wrapper">
+                        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <input type="text" id="otpInput" placeholder="e.g. 123456">
+                        <button class="action-btn" onclick="testRemoteVerification()" style="background-color: #059669;">Verify</button>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <!-- Mode 2: In-Person (PIN) Flow -->
+            <div class="input-section" id="mode_pin" style="display: none;">
+                <label class="input-label">Student Pin</label>
+                <div class="search-bar-wrapper" style="margin-bottom: 16px;">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                    </svg>
+                    <input type="password" id="pinInput" placeholder="Enter the 6-digit PIN">
+                    <button class="action-btn" onclick="testSSIVerification()">Unlock</button>
+                </div>
+
+                <!-- Granular Consent Checkboxes -->
+                <div style="background: rgba(255,255,255,0.6); padding: 12px 16px; border-radius: 12px; border: 1px solid #cbd5e1;">
+                    <p class="input-label" style="margin-bottom: 10px; font-size: 12px;">Granular Consent Permissions:</p>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #0f172a; margin-bottom: 8px; cursor: pointer;">
+                        <input type="checkbox" id="checkCore" checked style="width: 16px; height: 16px;"> 
+                        Core Identity (Name, DOB, State)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #0f172a; cursor: pointer;">
+                        <input type="checkbox" id="checkAcademic" checked style="width: 16px; height: 16px;"> 
+                        Academic Credentials Ledger
+                    </label>
+                </div>
+            </div>
 
         <!-- Result Card (Hidden by default until API success) -->
         <div id="result_card" class="result-card" style="display: none;">
@@ -122,6 +122,7 @@
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                     </svg>
                     <span id="card-title">Identity & Records Verified</span>
+                    <div id="auth_architecture_badge" style="margin-top: 10px; margin-bottom: 15px; font-size: 11px; font-weight: bold; padding: 6px 10px; border-radius: 6px; display: inline-block;"></div>
                 </div>
                 <!-- Large Green Ribbon Badge -->
                 <svg class="main-logo" id="card" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -167,12 +168,12 @@
                 </div>
             </div>
 
-<div id="credential_filter_section" style="margin-bottom: 16px;">
-    <label class="data-label" style="display: block; margin-bottom: 8px;">Filter Records By Category</label>
-    <select id="category_dropdown" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #1b5e20; background: #ffffff; color: #0f172a; font-size: 15px; outline: none; cursor: pointer;">
-        <option value="All">All Verified Records</option>
-    </select>
-</div>
+<div class="credential_filter_section" style="padding: 10px 14px; border-radius: 10px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px;">
+                <label for="category_dropdown" style="font-size: 13px; font-weight: 600; color: #1b5e20; white-space: nowrap;">Filter:</label>
+                <select id="category_dropdown" style="flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid #1b5e20; font-size: 14px; background: white; color: #0f172a;">
+                    <option value="All">All Verified Records</option>
+                </select>
+            </div>
 
 
 <div class="data-grid">
@@ -183,6 +184,9 @@
         <div class="data-label">PARENTS</div>
         <div class="data-value" id="student_parents">Restricted Access</div>
     </div>
+    <button id="download_hr_copy" style="display: none; width: 100%; background: #0f172a; color: white; border: none; padding: 12px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; margin-top: 20px;">
+    📄 Download Verification Copy
+</button>
 </div>
 <!-- Return / Verify Another Button -->
             <button class="return-btn" id="btn_back" onclick="resetToPreviousMenu()">
